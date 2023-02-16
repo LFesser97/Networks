@@ -18,6 +18,8 @@ import networkx.algorithms.community as nx_comm
 import os
 import json
 
+from GraphRicciCurvature.OllivierRicci import OllivierRicci
+
 #from GraphRicciCurvature.FormanRicci import FormanRicci
 #from GraphRicciCurvature.OllivierRicci import OllivierRicci
 
