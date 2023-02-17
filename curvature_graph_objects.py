@@ -75,8 +75,15 @@ class CurvatureGraph(nx.Graph):
         """
         Compute the Ollivier-Ricci curvature of the graph.
         """
-        # compute curvatures for all edges   NEED TO REVISIT THIS
-        cc.get_orc_edge_curvatures(self)
+        # compute curvatures for all edges
+        G = nx.Graph()
+        G.add_nodes_from(self.nodes)
+        G.add_edges_from(self.edges)
+        
+        # compute Ollivier-Ricci curvature
+        cc.get_orc_edge_curvatures(G)
+        for edge in self.edges:
+            self.edges[edge]["orc"] = G.edges[edge]["orc"]
 
     def compute_afrc(self):
         """
