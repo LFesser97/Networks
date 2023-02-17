@@ -8,13 +8,6 @@ Created on Feb 13 2023
 This file contains the classes for the curvature graph objects.
 """
 
-"""
-TO DO:
-
-- implement the correct augmented Forman-Ricci curvature
-- implement the Ollivier-Ricci curvature
-"""
-
 # import packages
 
 import networkx as nx
@@ -52,6 +45,8 @@ class CurvatureGraph(nx.Graph):
 
         self.cycles = {"triangles": [], "quadrangles": [], "pentagons": []}
         self.curvature_gap = {}
+        for edge in self.edges:
+            self.edges[edge]["weight"] = 1
 
 
         # more to come
