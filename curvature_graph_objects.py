@@ -230,6 +230,10 @@ class CurvatureAMF(CurvatureGraph):
     def __init__(self):
         super().__init__(nx.read_gml("Network Models/football.gml"))
 
+        # relabel node names with integers using nx.relabel_nodes
+        mapping = dict(zip(self, range(len(self.nodes))))
+        self = nx.relabel_nodes(self, mapping, copy=False)
+
     def compute_curvature_gap(self, curv_name):
         """
         Compute the curvature gap for the graph.
