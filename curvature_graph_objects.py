@@ -248,6 +248,10 @@ class CurvatureDolphins(CurvatureGraph):
     def __init__(self):
         super().__init__(nx.read_gml("Network Models/dolphins.gml"))
 
+        # relabel node names with integers using nx.relabel_nodes
+        mapping = dict(zip(self, range(len(self.nodes))))
+        self = nx.relabel_nodes(self, mapping, copy=False)
+
 
 class CurvatureUSPowerGrid(CurvatureGraph):
     """
@@ -257,20 +261,16 @@ class CurvatureUSPowerGrid(CurvatureGraph):
         super().__init__(nx.read_gml("Network Models/power.gml"))
 
 
-class CurvatureAstrophysics(CurvatureGraph):
-    """
-    A subclass of CurvatureGraph specifically for the astrophysics collaboration graph.
-    """
-    def __init__(self):
-        super().__init__(nx.read_gml("Network Models/astro-ph.gml"))
-
-
 class CurvatureWordAdjacency(CurvatureGraph):
     """
     A subclass of CurvatureGraph specifically for the word adjacency graph.
     """
     def __init__(self):
         super().__init__(nx.read_gml("Network Models/adjnoun.gml"))
+
+        # relabel node names with integers using nx.relabel_nodes
+        mapping = dict(zip(self, range(len(self.nodes))))
+        self = nx.relabel_nodes(self, mapping, copy=False)
 
 
 
