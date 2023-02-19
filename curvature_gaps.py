@@ -82,7 +82,7 @@ def calculate_SBM_cycle_weight_var():
         calculate_SBM(k_def, l_def, p_in_def, p_out_def, s, 3, q, p)
 
 
-def get_curvature_gap(Gr, cn="afrc", cmp_key="block"):
+def get_curvature_gap(Gr, curv_name="afrc", cmp_key="block"):
     """
     Get the curvature gap of the graph.
     The curvature values are the ones stored in the graph.
@@ -104,9 +104,9 @@ def get_curvature_gap(Gr, cn="afrc", cmp_key="block"):
         
     for u,v,d in Gr.edges.data():                            
         if Gr.nodes[u][cmp_key] == Gr.nodes[v][cmp_key]:    
-            c_dict["withins"]["data"].append(Gr.edges[u,v][cn])            
+            c_dict["withins"]["data"].append(Gr.edges[u,v][curv_name])            
         else:                                               
-            c_dict["betweens"]["data"].append(Gr.edges[u,v][cn])      
+            c_dict["betweens"]["data"].append(Gr.edges[u,v][curv_name])      
 
     for k in c_dict.keys():
         c_dict[k]["mean"] = np.mean(c_dict[k]["data"])      
@@ -179,3 +179,27 @@ def maximize_curvature_gap(G, a, cmp_key = "value"):
         res = minimize(optimization_func, x0, method='nelder-mead', args = (G, cmp_key), options={'disp': False})
         results.extend([-1 * res.fun, *res.x])
     return results
+
+
+def hbg_compute_curvature_gap(Gr, curv_name, cmp_key="prob"):
+    
+    c_dict = {"withins": {}, "betweens": {}}
+    for k in c_dict.keys():
+        c_dict[k][curv_name] = {"data": [], "mean": 0, "std": 0}
+        
+    for u,v,d in Gr.edges.data():                       
+        if Gr.edges[u,v][cmp_key] == 1:                              
+            c_dict["withins"][curv_name]["data"].append(Gr.edges[u,v][curv_name]) 
+        else:                                               
+            c_dict["betweens"][curv_name]["data"].append(Gr.edges[u,v][curv_name])       
+
+    for k in c_dict.keys():
+        c_dict[k][curv_name]["mean"] = np.mean(c_dict[k][curv_name]["data"])
+        c_dict[k][curv_name]["std"] = np.std(c_dict[k][curv_name]["data"])
+            
+    res_diffs = {}
+
+    sum_std = np.sqrt(np.square(c_dict["withins"][curv_name]["std"]) + np.square(c_dict["betweens"][curv_name]["std"]))   # Gesamt-Stdabw berechnen
+    res_diffs[curv_name] = np.abs((c_dict["withins"][curv_name]["mean"] - c_dict["betweens"][curv_name]["mean"]) / sum_std)     # Differenz der Mittelwerte bilden und normieren
+    
+    return res_diffs

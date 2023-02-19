@@ -215,17 +215,17 @@ class CurvatureGraph(nx.Graph):
 
         except KeyError as error:
             if error.args[0] == "frc":
-                print("Forman-Ricci curvature not found. Compute it now.")
+                print("Forman-Ricci curvature not found. Computing it now.")
                 self.compute_frc()
                 self.compute_correlation(curvature1, curvature2)
 
             elif error.args[0] == "orc":
-                print("Ollivier-Ricci curvature not found. Compute it now.")
+                print("Ollivier-Ricci curvature not found. Computing it now.")
                 self.compute_orc()
                 self.compute_correlation(curvature1, curvature2)
 
             elif error.args[0] == "afrc":
-                print("Augmented Forman-Ricci curvature not found. Compute it now.")
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
                 self.compute_afrc()
                 self.compute_correlation(curvature1, curvature2)
 
@@ -263,6 +263,20 @@ class CurvatureBG(CurvatureGraph):
     """
     def __init__(self, n, p):
         super().__init__(nx.bipartite.random_graph(n, n, p, seed=0))
+
+
+class CurvatureHBG(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for hierarchical bipartite graphs.
+    """
+    def __init__(self, n, m, p, q):
+        self = af.get_bipartite_graph(n, m, p, q)
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.hbg_compute_curvature_gap(self, curv_name)
 
 
 # define subclasses for real graphs

@@ -265,3 +265,58 @@ def read_pos_sbm(k,n):
     p = pos_list_as_array(read_data_from_json_file(full_fn))
     p = {int(k):v  for (k,v) in iter(p.items())}
     return p
+
+
+def get_bipartite_graph (n=40, m=40, p_high=0.7, p_low=0.2):
+    '''
+    Builds a bipartite graph with groups A (with subgroups A1 and A2) and B (with subgroups B1 and B2), 
+    adds edges between subgroups A1-B1 and A2-B2 with high probability and 
+    edges between subgroups A1-B2 and A2-B1 with low probability
+
+    Parameters
+    ----------
+    n : integer
+        number of nodes in A (split evenly to get A1 and A2)
+    m : integer
+        number of nodes in B (split evenly to get B1 and B2)
+    p_high : integer
+        probability for B1-A1 and B2-A2
+    p_low : integer
+        probability for B1-A2 and B2-A1
+
+    Returns
+    -------
+    B : graph (bipartite)
+
+    '''
+    
+    # assert n,m are even
+    n = (n // 2) * 2
+    m = (m // 2) * 2
+    
+    # create empty graph
+    B = nx.Graph()
+
+    # add nodes subgroupwise
+    # definition of subgroups in tuple list
+    nodes_struct = [(n//2, 0, "A1"), (n//2, 0, "A2"), (m//2, 1, "B1"), (m//2, 1, "B2")] 
+    a,b = 0,0
+    for nd in nodes_struct:
+        b += nd[0]
+        B.add_nodes_from(list(range(a,b)), bipartite = nd[1], group = nd[2])
+        a += nd[0]
+        
+    # add edges if binom. distrib. yields 1
+    edges_struct = [("A1","B1",p_high), ("A1","B2",p_low), ("A2","B1",p_low), ("A2","B2",p_high)]
+    for ed in edges_struct:
+        edge_tupels = []
+        gr0 = [n  for n,d in B.nodes.data()  if d["group"] == ed[0]]
+        gr1 = [n  for n,d in B.nodes.data()  if d["group"] == ed[1]]
+        binom_dist = np.random.binomial(1, ed[2], (len(gr0),len(gr1)))
+        for i,n0 in enumerate(gr0):
+            for j,n1 in enumerate(gr1):
+                if binom_dist[i,j] == 1:
+                    edge_tupels.append((n0, n1))
+        B.add_edges_from(edge_tupels, prob = 1 if ed[2] == p_high else 0)
+    
+    return B
