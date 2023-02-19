@@ -107,6 +107,7 @@ class CurvatureGraph(nx.Graph):
                     self, u, v, 
                     t_num = self.edges[edge]["triangles"]
                     )
+
         except KeyError:
             print("Need to compute the number of triangles first.")
             self.count_triangles()
@@ -150,7 +151,7 @@ class CurvatureGraph(nx.Graph):
                 u, v = edge
                 self.edges[edge]["triangles"] = len([cycle for cycle in self.cycles["triangles"] if u in cycle and v in cycle])/2
 
-        except KeyError:
+        except AttributeError:
             print("Need to compute the cycles first.")
             self.get_cycles()
             self.count_triangles()
