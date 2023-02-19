@@ -43,7 +43,7 @@ class CurvatureGraph(nx.Graph):
         #    self.edges[edge]["quadrangles"] = 0
         #    self.edges[edge]["pentagons"] = 0
 
-        self.cycles = {"triangles": [], "quadrangles": [], "pentagons": []}
+        # self.cycles = {"triangles": [], "quadrangles": [], "pentagons": []}
         self.curvature_gap = {}
         for edge in self.edges:
             self.edges[edge]["weight"] = 1
@@ -145,9 +145,15 @@ class CurvatureGraph(nx.Graph):
         """
         Count the number of triangles for each edge in the graph.
         """
-        for edge in list(self.edges()):
-            u, v = edge
-            self.edges[edge]["triangles"] = len([cycle for cycle in self.cycles["triangles"] if u in cycle and v in cycle])/2
+        try:
+            for edge in list(self.edges()):
+                u, v = edge
+                self.edges[edge]["triangles"] = len([cycle for cycle in self.cycles["triangles"] if u in cycle and v in cycle])/2
+
+        except KeyError:
+            print("Need to compute the cycles first.")
+            self.get_cycles()
+            self.count_triangles()
             
     def count_quadrangles(self):
         """
