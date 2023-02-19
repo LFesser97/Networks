@@ -241,6 +241,38 @@ class CurvatureAMF(CurvatureGraph):
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "value")
 
 
+class CurvatureDolphins(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for the dolphins graph.
+    """
+    def __init__(self):
+        super().__init__(nx.read_gml("Network Models/dolphins.gml"))
+
+
+class CurvatureUSPowerGrid(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for the US power grid graph.
+    """
+    def __init__(self):
+        super().__init__(nx.read_gml("Network Models/power.gml"))
+
+
+class CurvatureAstrophysics(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for the astrophysics collaboration graph.
+    """
+    def __init__(self):
+        super().__init__(nx.read_gml("Network Models/astro-ph.gml"))
+
+
+class CurvatureWordAdjacency(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for the word adjacency graph.
+    """
+    def __init__(self):
+        super().__init__(nx.read_gml("Network Models/adjnoun.gml"))
+
+
 
 
 
