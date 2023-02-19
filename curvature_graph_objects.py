@@ -43,7 +43,7 @@ class CurvatureGraph(nx.Graph):
         #    self.edges[edge]["quadrangles"] = 0
         #    self.edges[edge]["pentagons"] = 0
 
-        # self.cycles = {"triangles": [], "quadrangles": [], "pentagons": []}
+        self.cycles = {}
         self.curvature_gap = {}
         for edge in self.edges:
             self.edges[edge]["weight"] = 1
