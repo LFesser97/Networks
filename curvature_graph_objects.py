@@ -270,7 +270,7 @@ class CurvatureHBG(CurvatureGraph):
     A subclass of CurvatureGraph specifically for hierarchical bipartite graphs.
     """
     def __init__(self, n, m, p, q):
-        self = af.get_bipartite_graph(n, m, p, q)
+        super().__init__(af.get_bipartite_graph(n, m, p, q))
 
     def compute_curvature_gap(self, curv_name):
         """
