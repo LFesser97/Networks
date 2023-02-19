@@ -38,18 +38,11 @@ class CurvatureGraph(nx.Graph):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        #for edge in self.edges:
-        #    self.edges[edge]["triangles"] = 0
-        #    self.edges[edge]["quadrangles"] = 0
-        #    self.edges[edge]["pentagons"] = 0
-
         self.cycles = {}
         self.curvature_gap = {}
         for edge in self.edges:
             self.edges[edge]["weight"] = 1
 
-
-        # more to come
 
     def get_cycles(self):
         """
@@ -63,6 +56,7 @@ class CurvatureGraph(nx.Graph):
         self.cycles["quadrangles"] = [cycle for cycle in all_cycles if len(cycle) == 4]
         self.cycles["pentagons"] = [cycle for cycle in all_cycles if len(cycle) == 5]
 
+
     def compute_frc(self):
         """
         Compute the Forman-Ricci curvature of the graph.
@@ -70,6 +64,7 @@ class CurvatureGraph(nx.Graph):
         for edge in list(self.edges()):
             u, v = edge
             self.edges[edge]['frc'] = cc.fr_curvature(self, u, v)
+
 
     def compute_orc(self):
         """
@@ -85,6 +80,7 @@ class CurvatureGraph(nx.Graph):
         for edge in self.edges:
             self.edges[edge]["orc"] = G.edges[edge]["orc"]
 
+
     def compute_afrc(self):
         """
         Compute the correct augmented Forman-Ricci curvature of the graph.
@@ -93,6 +89,7 @@ class CurvatureGraph(nx.Graph):
 
             # compute curvature
             self.edges[edge]['afrc'] = cc.AugFormanSq(edge, self)
+
 
     def compute_afrc_3(self):
         """
@@ -113,34 +110,52 @@ class CurvatureGraph(nx.Graph):
             self.count_triangles()
             self.compute_afrc_3()
 
+
     def compute_afrc_4(self):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
-        for edge in list(self.edges()):
-            u, v = edge
+        try:
+            for edge in list(self.edges()):
+                u, v = edge
 
-            # compute curvature
-            self.edges[edge]['afrc_4'] = cc.afrc_4_curvature(
-                self, u, v, 
-                t_num = self.edges[edge]["triangles"], 
-                q_num = self.edges[edge]["quadrangles"]
-                )
+                # compute curvature
+                self.edges[edge]['afrc_4'] = cc.afrc_4_curvature(
+                    self, u, v, 
+                    t_num = self.edges[edge]["triangles"], 
+                    q_num = self.edges[edge]["quadrangles"]
+                    )
+
+        except KeyError:
+            print("Need to compute the number of triangles and quadrangles first.")
+            self.count_triangles()
+            self.count_quadrangles()
+            self.compute_afrc_4()
+
 
     def compute_afrc_5(self):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
-        for edge in list(self.edges()):
-            u, v = edge
+        try:
+            for edge in list(self.edges()):
+                u, v = edge
 
-            # compute curvature
-            self.edges[edge]['afrc_5'] = cc.afrc_5_curvature(
-                self, u, v, 
-                t_num = self.edges[edge]["triangles"], 
-                q_num = self.edges[edge]["quadrangles"], 
-                p_num = self.edges[edge]["pentagons"]
-                )
+                # compute curvature
+                self.edges[edge]['afrc_5'] = cc.afrc_5_curvature(
+                    self, u, v, 
+                    t_num = self.edges[edge]["triangles"], 
+                    q_num = self.edges[edge]["quadrangles"], 
+                    p_num = self.edges[edge]["pentagons"]
+                    )
+
+        except KeyError:
+            print("Need to compute the number of triangles, quadrangles and pentagons first.")
+            self.count_triangles()
+            self.count_quadrangles()
+            self.count_pentagons()
+            self.compute_afrc_5()
+
 
     def count_triangles(self): # reimplement this using allocate_cycles_to_edges
         """
@@ -160,17 +175,31 @@ class CurvatureGraph(nx.Graph):
         """
         Count the number of quadrangles for each edge in the graph.
         """
-        for edge in list(self.edges()):
-            u, v = edge
-            self.edges[edge]["quadrangles"] = len([cycle for cycle in self.cycles["quadrangles"] if u in cycle and v in cycle])/2
+        try:
+            for edge in list(self.edges()):
+                u, v = edge
+                self.edges[edge]["quadrangles"] = len([cycle for cycle in self.cycles["quadrangles"] if u in cycle and v in cycle])/2
+
+        except KeyError:
+            print("Need to compute the cycles first.")
+            self.get_cycles()
+            self.count_quadrangles()
+
 
     def count_pentagons(self):
         """
         Count the number of pentagons for each edge in the graph.
         """
-        for edge in list(self.edges()):
-            u, v = edge
-            self.edges[edge]["pentagons"] = len([cycle for cycle in self.cycles["pentagons"] if u in cycle and v in cycle])/2
+        try:
+            for edge in list(self.edges()):
+                u, v = edge
+                self.edges[edge]["pentagons"] = len([cycle for cycle in self.cycles["pentagons"] if u in cycle and v in cycle])/2
+        
+        except KeyError:
+            print("Need to compute the cycles first.")
+            self.get_cycles()
+            self.count_pentagons()
+
 
     def compute_correlation(self, curvature1, curvature2):
         """
