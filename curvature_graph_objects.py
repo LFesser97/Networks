@@ -260,7 +260,7 @@ class CurvatureUSPowerGrid(CurvatureGraph):
     A subclass of CurvatureGraph specifically for the US power grid graph.
     """
     def __init__(self):
-        super().__init__(nx.read_gml("Network Models/power.gml"))
+        super().__init__(nx.read_gml("Network Models/power.gml", label  = 'id'))
 
 
 class CurvatureWordAdjacency(CurvatureGraph):
