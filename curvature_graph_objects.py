@@ -201,10 +201,12 @@ class CurvatureER(CurvatureGraph):
         super().__init__(nx.erdos_renyi_graph(n, p))
     
 
-# class CurvatureHBG(CurvatureGraph):
+class CurvatureBG(CurvatureGraph):
     """
-    A subclass of CurvatureGraph specifically for hierarchical bipartite graphs.
+    A subclass of CurvatureGraph specifically for bipartite graphs.
     """
+    def __init__(self, n, p):
+        super().__init__(nx.bipartite.random_graph(n, n, p, seed=0))
 
 
 # define subclasses for real graphs
