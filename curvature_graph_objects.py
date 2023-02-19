@@ -38,10 +38,10 @@ class CurvatureGraph(nx.Graph):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for edge in self.edges:
-            self.edges[edge]["triangles"] = 0 
-            self.edges[edge]["quadrangles"] = 0
-            self.edges[edge]["pentagons"] = 0 
+        #for edge in self.edges:
+        #    self.edges[edge]["triangles"] = 0
+        #    self.edges[edge]["quadrangles"] = 0
+        #    self.edges[edge]["pentagons"] = 0
 
         self.cycles = {"triangles": [], "quadrangles": [], "pentagons": []}
         self.curvature_gap = {}
@@ -98,14 +98,19 @@ class CurvatureGraph(nx.Graph):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
-        for edge in list(self.edges()):
-            u, v = edge
+        try:
+            for edge in list(self.edges()):
+                u, v = edge
 
-            # compute curvature
-            self.edges[edge]['afrc_3'] = cc.afrc_3_curvature(
-                self, u, v, 
-                t_num = self.edges[edge]["triangles"]
-                )      
+                # compute curvature
+                self.edges[edge]['afrc_3'] = cc.afrc_3_curvature(
+                    self, u, v, 
+                    t_num = self.edges[edge]["triangles"]
+                    )
+        except KeyError:
+            print("Need to compute the number of triangles first.")
+            self.count_triangles()
+            self.compute_afrc_3()
 
     def compute_afrc_4(self):
         """
