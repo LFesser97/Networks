@@ -205,14 +205,29 @@ class CurvatureGraph(nx.Graph):
         """
         Compute the correlation between two curvatures.
         """
-        corr_coeff = np.corrcoef(
-            [self.edges[edge][curvature1] for edge in self.edges], 
-            [self.edges[edge][curvature2] for edge in self.edges]
-            )[0, 1]
+        try:
+            corr_coeff = np.corrcoef(
+                [self.edges[edge][curvature1] for edge in self.edges], 
+                [self.edges[edge][curvature2] for edge in self.edges]
+                )[0, 1]
 
-        return corr_coeff
+            return corr_coeff
 
+        except KeyError as error:
+            if error.args[0] == "frc":
+                print("Forman-Ricci curvature not found. Compute it now.")
+                self.compute_frc()
+                self.compute_correlation(curvature1, curvature2)
 
+            elif error.args[0] == "orc":
+                print("Ollivier-Ricci curvature not found. Compute it now.")
+                self.compute_orc()
+                self.compute_correlation(curvature1, curvature2)
+
+            elif error.args[0] == "afrc":
+                print("Augmented Forman-Ricci curvature not found. Compute it now.")
+                self.compute_afrc()
+                self.compute_correlation(curvature1, curvature2)
 
 
 # define subclasses for artificial graphs
