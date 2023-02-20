@@ -17,6 +17,7 @@ from copy import deepcopy
 import networkx.algorithms.community as nx_comm
 import os
 import json
+import random
 
 
 # import functions from other scripts in the repository
@@ -247,6 +248,67 @@ class CurvatureSBM(CurvatureGraph):
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name)
+
+
+class CurvatureDC_SBM(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for degree-corrected stochastic block models.
+    """
+    def __init__(self, B, k, E):
+        """
+        Initialize a degree-corrected stochastic block model.
+
+        Parameters
+        ----------
+        B : int
+            The number of blocks in the model.
+
+        k : list
+            A list of the degrees of the nodes. Must be a multiple of B.
+            Each block will have the same number of nodes.
+
+        E : np.array
+            A matrix of the number of edges between the blocks.
+
+        Returns
+        -------
+        G : nx.Graph
+            A degree-corrected stochastic block model.
+        """
+        # compute the number of nodes in each block
+        n = len(k) // B
+
+        # generate B subnetworks according to the configuration model
+        subnetworks = []
+
+        # generate the subnetworks according to the next n degrees in k
+        for i in range(B):
+            subnetworks.append(nx.configuration_model(k[i*n:(i+1)*n]))
+
+            # give the nodes in the subnetworks the same community label
+            for node in subnetworks[i].nodes:
+                subnetworks[i].nodes[node]["community"] = i
+
+        # merge the subnetworks into a single network
+        G = nx.disjoint_union_all(subnetworks)
+
+        # add the edges between the blocks randomly according to the matrix E
+        for i in range(B):
+            for j in range(B):
+                if i != j:
+                    for edge in range(E[i, j]):
+                        u = random.choice(list(G.nodes)[i*n:(i+1)*n])
+                        v = random.choice(list(G.nodes)[j*n:(j+1)*n])
+                        G.add_edge(u, v)
+
+        super().__init__(G)
+        
+
+    def compute_curvature_gap(self, curv_name, cmp_key = "community"):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key)
 
 
 class CurvatureER(CurvatureGraph):

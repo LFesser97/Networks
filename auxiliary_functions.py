@@ -320,3 +320,9 @@ def get_bipartite_graph (n=40, m=40, p_high=0.7, p_low=0.2):
         B.add_edges_from(edge_tupels, prob = 1 if ed[2] == p_high else 0)
     
     return B
+
+
+def afrc_curvature(G):
+    """
+    Compute the correct augmented Forman-Ricci curvature of the graph.
+    """
