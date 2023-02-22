@@ -236,7 +236,8 @@ def get_bin_width (b_min, b_max, num_bin_lim):
         b_hi_lim = b_max             
     return b_lo_lim, b_hi_lim, b_width
 
-def show_histo (h_data, title_str, my_bin_num = 40): # NEED TO SPECIFY WHAT THIS FUNCTION IS USED FOR
+
+def show_histo(h_data, title_str, my_bin_num = 40): # NEED TO SPECIFY WHAT THIS FUNCTION IS USED FOR
     """
     Show the histogram for the given data. 
 
@@ -544,3 +545,56 @@ def calculate_karate_club ():
     show_histos(G,1)
 
 """ NEED TO REVISIT THE CODE ABOVE THIS LINE """
+
+
+def plot_curvature_hist(curv_list, title):
+    """
+    Plot histogram of curvature values
+
+    Parameters
+    ----------
+    curv_list : list
+        List of curvature values.
+
+    Returns
+    -------
+    None.
+        Plots the histogram.
+    """
+    fig, ax = plt.subplots(figsize=(14,10))
+    ax.hist(curv_list, bins=40, edgecolor="white")
+    ax.set_title(title)
+    ax.title.set_size(16)
+    ax.tick_params(axis='both', labelsize=16)
+    ax.grid(visible=True, axis="both")
+    plt.show()
+
+
+def plot_curvature_hist_colors(curv_list_within, curv_list_between, title):
+    """
+    Plot histogram of curvature values
+
+    Parameters
+    ----------
+    curv_list_within : list
+        List of curvature values within communities.
+
+    curv_list_between : list
+        List of curvature values between communities.
+
+    title : str
+        Title of the plot.
+
+    Returns
+    -------
+    None.
+        Plots the histogram.
+    """
+    fig, ax = plt.subplots(figsize=(14,10))
+    ax.hist([curv_list_within, curv_list_between], bins=40, edgecolor="white", color=["blue", "orange"], label=["within", "between"])
+    ax.set_title(title)
+    ax.title.set_size(16)
+    ax.tick_params(axis='both', labelsize=16)
+    ax.grid(visible=True, axis="both")
+    ax.legend()
+    plt.show()

@@ -17,6 +17,7 @@ from copy import deepcopy
 import networkx.algorithms.community as nx_comm
 import os
 import json
+import random
 
 
 def save_data_to_json_file(d, filename):
@@ -322,7 +323,91 @@ def get_bipartite_graph (n=40, m=40, p_high=0.7, p_low=0.2):
     return B
 
 
-def afrc_curvature(G):
+def get_edges_between_blocks(list_1, list_2, e):
     """
-    Compute the correct augmented Forman-Ricci curvature of the graph.
+    Get edges between blocks.
+
+    Parameters
+    ----------
+    list_1 : list
+        List of degrees of nodes in first block.
+
+    list_2 : list
+        List of degrees of nodes in second block.
+
+    e : int
+        Number of edges between blocks.
+
+    Returns
+    -------
+    edges : list
+        List of edges between blocks.
+
+    new_list_1 : list
+        List of degrees of nodes in first block.
+
+    new_list_2 : list
+        List of degrees of nodes in second block.
     """
+    edges = []
+
+    aux_list_1 = []
+    aux_list_2 = []
+
+    for i in range(len(list_1)):
+        for j in range(list_1[i]):
+            aux_list_1.append(i)
+
+    for i in range(len(list_2)):
+        for j in range(list_2[i]):
+            aux_list_2.append(i)
+
+    for i in range(e):
+        stub_1 = random.choice(aux_list_1)
+        stub_2 = random.choice(aux_list_2)
+
+        aux_list_1.remove(stub_1)
+        aux_list_2.remove(stub_2)
+
+        edges.append((stub_1, stub_2))
+
+    new_list_1 = [0] * len(list_1)
+    new_list_2 = [0] * len(list_2)
+
+    for i in range(len(list_1)):
+        new_list_1[i] = aux_list_1.count(i)
+
+    for i in range(len(list_2)):
+        new_list_2[i] = aux_list_2.count(i)
+
+    return edges, new_list_1, new_list_2
+
+
+# function to check whether a given graph object has a community structure,
+# if yes, adds "group" attribute (within or between) to each edge
+
+def assign_edges(G, compare_key):
+    """
+    Allocate the edges of a given graph to within or between community edges.
+    Node communities can be distinguished by the attribute "compare_key".
+
+    Parameters
+    ----------
+    G : graph
+        The input graph.
+
+    compare_key : string
+        The attribute key to compare.
+
+    Returns
+    -------
+    G : graph
+        The input graph with the attribute "group" added to each edge.
+    """
+
+    for e in G.edges:
+        if G.nodes[e[0]][compare_key] == G.nodes[e[1]][compare_key]:
+            G.edges[e]["group"] = "within"
+        else:
+            G.edges[e]["group"] = "between"
+    return G

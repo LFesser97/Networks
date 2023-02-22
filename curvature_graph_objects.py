@@ -25,6 +25,7 @@ import random
 import compute_curvatures as cc
 import auxiliary_functions as af
 import curvature_gaps as cg
+import visualizations as vis
 
 
 # define abstract class for curvature graphs
@@ -231,6 +232,57 @@ class CurvatureGraph(nx.Graph):
                 self.compute_correlation(curvature1, curvature2)
 
 
+    def plot_curvature_histogram(self, curvature, title = '', colors = False):
+        """
+        Plot a histogram of the values of a curvature.
+
+        Parameters
+        ----------
+        curvature : str
+            The curvature to plot. Can be "frc", "orc" or "afrc".
+
+        title : str, optional
+            The title of the plot. The default is ''.
+
+        colors : bool, optional
+            Whether to color the histogram by the edge affiliation (between or within communities). 
+            The default is False.
+
+        Returns
+        -------
+        None.
+            Plots the histogram.
+        """
+        try:
+            if colors:
+                vis.plot_curvature_hist_colors(
+                    [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
+                    [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"],
+                    title = title
+                )
+
+            else:
+                vis.plot_curvature_hist(
+                    [self.edges[edge][curvature] for edge in self.edges], 
+                    title = title)
+
+        except KeyError as error:
+            if error.args[0] == "frc":
+                print("Forman-Ricci curvature not found. Computing it now.")
+                self.compute_frc()
+                self.plot_curvature_histogram(curvature, colors)
+
+            elif error.args[0] == "orc":
+                print("Ollivier-Ricci curvature not found. Computing it now.")
+                self.compute_orc()
+                self.plot_curvature_histogram(curvature, colors)
+
+            elif error.args[0] == "afrc":
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
+                self.compute_afrc()
+                self.plot_curvature_histogram(curvature, colors)
+
+
 # define subclasses for artificial graphs
 
 class CurvatureSBM(CurvatureGraph):
@@ -249,66 +301,99 @@ class CurvatureSBM(CurvatureGraph):
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name)
 
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        self = af.assign_edges(self, "block")
+
 
 class CurvatureDC_SBM(CurvatureGraph):
     """
     A subclass of CurvatureGraph specifically for degree-corrected stochastic block models.
     """
-    def __init__(self, B, k, E):
+    def __init__(self, b, B, k, E):
         """
         Initialize a degree-corrected stochastic block model.
 
         Parameters
         ----------
+        b : list
+            A list of the Block affiliation of each node.
+            # [1, 1, 1, 3, 4, 6, 2, 0, 5]
+
         B : int
             The number of blocks in the model.
 
         k : list
-            A list of the degrees of the nodes. Must be a multiple of B.
-            Each block will have the same number of nodes.
+            A list of the degrees of the nodes. 
+            # [3, 4, 5, 2, 1, 3, 2, 1, 2]
 
-        E : np.array
-            A matrix of the number of edges between the blocks.
+        E : dict
+            A dictionary of the number of edges between the blocks. With sets as keys.
 
         Returns
         -------
         G : nx.Graph
             A degree-corrected stochastic block model.
         """
-        # compute the number of nodes in each block
-        n = len(k) // B
+        assert len(b) == len(k), "The length of b and k must be the same."
 
-        # generate B subnetworks according to the configuration model
-        subnetworks = []
+        # create a dictionary with blocks as keys, and lists of nodes and degrees as values
+        block_dict = {block: ([], []) for block in range(B)}
 
-        # generate the subnetworks according to the next n degrees in k
-        for i in range(B):
-            subnetworks.append(nx.configuration_model(k[i*n:(i+1)*n]))
+        for node in range(len(b)):
+            block_dict[b[node]][0].append(node)
+            block_dict[b[node]][1].append(k[node])
 
-            # give the nodes in the subnetworks the same community label
-            for node in subnetworks[i].nodes:
-                subnetworks[i].nodes[node]["community"] = i
+        # initialize the adjacency matrix
+        A = np.zeros((len(b), len(b)))
 
-        # merge the subnetworks into a single network
-        G = nx.disjoint_union_all(subnetworks)
+        for block_1 in range(B):
+            for block_2 in range(block_1, B):
+                assert block_1 < block_2, "The block_1 must be less than block_2."
 
-        # add the edges between the blocks randomly according to the matrix E
-        for i in range(B):
-            for j in range(B):
-                if i != j:
-                    for edge in range(E[i, j]):
-                        u = random.choice(list(G.nodes)[i*n:(i+1)*n])
-                        v = random.choice(list(G.nodes)[j*n:(j+1)*n])
-                        G.add_edge(u, v)
+                # get the degrees of the nodes in node_1 and node_2, store them in two lists
+                k_1, k_2 = block_dict[block_1][1], block_dict[block_2][1]
+
+                # get the number of edges between the two blocks
+                num_edges = E[(block_1, block_2)]
+
+                # draw the edges between the two blocks, update the degree lists
+                edges_between, new_list_1, new_list_2 = af.get_edges_between_blocks(k_1, k_2, num_edges)
+
+                # update the adjacency matrix
+                for edge in edges_between:
+                    A[block_dict[block_1][0][edge[0]], block_dict[block_2][0][edge[1]]] = 1
+                    A[block_dict[block_2][0][edge[1]], block_dict[block_1][0][edge[0]]] = 1
+
+                # update the degree lists in the dictionary
+                block_dict[block_1][1] = new_list_1
+                block_dict[block_2][1] = new_list_2
+
+        # create the graph
+        G = nx.from_numpy_array(A)
+
+        # for each degree sequence in the dictionary, create a graph according to the configuration model
+        for block in range(B):
+            G = nx.compose(G, nx.configuration_model(block_dict[block][1]))
 
         super().__init__(G)
-        
+
+        # add note attributes from the block dictionary?
+
 
     def compute_curvature_gap(self, curv_name, cmp_key = "community"):
         """
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key)
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        self = af.assign_edges(self, "block")
 
 
 class CurvatureER(CurvatureGraph):
@@ -340,6 +425,12 @@ class CurvatureHBG(CurvatureGraph):
         """
         self.curvature_gap[curv_name] = cg.hbg_compute_curvature_gap(self, curv_name)
 
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        pass # to be implemented
+
 
 # define subclasses for real graphs
 
@@ -355,6 +446,12 @@ class CurvatureKarate(CurvatureGraph):
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "club")
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        self = af.assign_edges(self, "club")
 
 
 class CurvatureAMF(CurvatureGraph):
@@ -373,6 +470,12 @@ class CurvatureAMF(CurvatureGraph):
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "value")
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        self = af.assign_edges(self, "value")
 
 
 class CurvatureDolphins(CurvatureGraph):
