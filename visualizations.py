@@ -262,11 +262,14 @@ def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
     # bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(h_data[k]["bin_min"], h_data[k]["bin_max"], my_bin_num)
 
     # get the smallest and largest values in the data
-    values = h_data[0]
-    values.extend(h_data[1])
-    min_val = min(values)
-    max_val = max(values)
-    
+    min_0 = min(h_data[0])
+    min_1 = min(h_data[1])
+    min_val = min(min_0, min_1)
+
+    max_0 = max(h_data[0])
+    max_1 = max(h_data[1])
+    max_val = max(max_0, max_1)
+
     print("min_val = ", min_val)
     print("max_val = ", max_val)
 
