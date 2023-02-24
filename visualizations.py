@@ -419,7 +419,7 @@ def plot_curvature_hist_colors(curv_list_within, curv_list_between, title):
         Plots the histogram.
     """
     fig, ax = plt.subplots(figsize=(14,10))
-    ax.hist([curv_list_within, curv_list_between], bins=40, edgecolor="white", color=["blue", "orange"], label=["within", "between"])
+    ax.hist([curv_list_within, curv_list_between], bins=40, edgecolor="white", color=["blue", "orange"], label=["within", "between"], stacked = True)
     ax.set_title(title)
     ax.title.set_size(16)
     ax.tick_params(axis='both', labelsize=16)
