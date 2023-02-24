@@ -254,6 +254,17 @@ class CurvatureGraph(nx.Graph):
             Plots the histogram.
         """
         print(colors)
+
+        print([
+                [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
+                [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]])
+
+        vis.plot_curvature_hist_colors([
+            [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
+            [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]],
+            title = title
+
+        """
         try:
             print(colors)
 
@@ -289,6 +300,8 @@ class CurvatureGraph(nx.Graph):
                 print("Augmented Forman-Ricci curvature not found. Computing it now.")
                 self.compute_afrc()
                 self.plot_curvature_histogram(curvature, colors)
+
+        """
 
 
 # define subclasses for artificial graphs
