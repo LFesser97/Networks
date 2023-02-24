@@ -259,7 +259,13 @@ def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
     None.
     """
     fig, ax = plt.subplots(figsize=(16,10))
-    #bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(h_data[k]["bin_min"], h_data[k]["bin_max"], my_bin_num)
+    # bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(h_data[k]["bin_min"], h_data[k]["bin_max"], my_bin_num)
+
+    # get the smallest and largest values in the data
+    min = np.min(h_data[0].extend(h_data[1]))
+    max = np.max(h_data[0].extend(h_data[1]))
+
+    bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(min, max, my_bin_num)
     ax.hist(h_data,  # used to be h_data[k]["curv"]
                     #bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
                     edgecolor = "white", 
@@ -396,33 +402,3 @@ def plot_curvature_hist(curv_list, title):
     ax.tick_params(axis='both', labelsize=16)
     ax.grid(visible=True, axis="both")
     plt.show()
-
-
-# def plot_curvature_hist_colors(curv_list_within, curv_list_between, title):
-    """
-    Plot histogram of curvature values
-
-    Parameters
-    ----------
-    curv_list_within : list
-        List of curvature values within communities.
-
-    curv_list_between : list
-        List of curvature values between communities.
-
-    title : str
-        Title of the plot.
-
-    Returns
-    -------
-    None.
-        Plots the histogram.
-    """
-#    fig, ax = plt.subplots(figsize=(14,10))
-#    ax.hist([curv_list_within, curv_list_between], bins=40, edgecolor="white", color=["blue", "orange"], label=["within", "between"], stacked = True)
-#    ax.set_title(title)
-#    ax.title.set_size(16)
-#    ax.tick_params(axis='both', labelsize=16)
-#    ax.grid(visible=True, axis="both")
-#    ax.legend()
-#    plt.show()
