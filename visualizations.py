@@ -259,19 +259,17 @@ def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
     None.
     """
     fig, ax = plt.subplots(figsize=(16,10))
-    for i,k in enumerate(h_data.keys()):
+    #bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(h_data[k]["bin_min"], h_data[k]["bin_max"], my_bin_num)
+    ax.hist(h_data,  # used to be h_data[k]["curv"]
+                    #bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
+                    edgecolor = "white", 
+                    histtype='bar', 
+                    stacked=True)
 
-        bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(h_data[k]["bin_min"], h_data[k]["bin_max"], my_bin_num)
-        ax.hist(h_data,  # used to be h_data[k]["curv"]
-                       bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
-                       edgecolor = "white", 
-                       histtype='bar', 
-                       stacked=True)
-
-        ax.set_title(h_data[k]["title"])
-        ax.title.set_size(16)
-        ax.tick_params(axis='both', labelsize=16)
-        ax.grid(visible=True, axis="both")
+    ax.set_title(title_str)
+    ax.title.set_size(16)
+    ax.tick_params(axis='both', labelsize=16)
+    ax.grid(visible=True, axis="both")
     fig.suptitle(title_str, size=16)
     plt.show()  
 
