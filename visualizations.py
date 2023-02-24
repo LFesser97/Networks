@@ -237,7 +237,9 @@ def get_bin_width (b_min, b_max, num_bin_lim):
     return b_lo_lim, b_hi_lim, b_width
 
 
-def show_histo(h_data, title_str, my_bin_num = 40): # NEED TO SPECIFY WHAT THIS FUNCTION IS USED FOR
+# changed the name of this
+# def show_histo(h_data, title_str, my_bin_num = 40):
+def plot_curvature_hist_colors(h_data, title_str, my_bin_num = 40):
     """
     Show the histogram for the given data. 
 
@@ -260,7 +262,7 @@ def show_histo(h_data, title_str, my_bin_num = 40): # NEED TO SPECIFY WHAT THIS 
     for i,k in enumerate(h_data.keys()):
 
         bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(h_data[k]["bin_min"], h_data[k]["bin_max"], my_bin_num)
-        ax.hist(h_data[k]["curv"], 
+        ax.hist(h_data,  # used to be h_data[k]["curv"]
                        bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
                        edgecolor = "white", 
                        histtype='bar', 
@@ -398,7 +400,7 @@ def plot_curvature_hist(curv_list, title):
     plt.show()
 
 
-def plot_curvature_hist_colors(curv_list_within, curv_list_between, title):
+# def plot_curvature_hist_colors(curv_list_within, curv_list_between, title):
     """
     Plot histogram of curvature values
 
@@ -418,11 +420,11 @@ def plot_curvature_hist_colors(curv_list_within, curv_list_between, title):
     None.
         Plots the histogram.
     """
-    fig, ax = plt.subplots(figsize=(14,10))
-    ax.hist([curv_list_within, curv_list_between], bins=40, edgecolor="white", color=["blue", "orange"], label=["within", "between"], stacked = True)
-    ax.set_title(title)
-    ax.title.set_size(16)
-    ax.tick_params(axis='both', labelsize=16)
-    ax.grid(visible=True, axis="both")
-    ax.legend()
-    plt.show()
+#    fig, ax = plt.subplots(figsize=(14,10))
+#    ax.hist([curv_list_within, curv_list_between], bins=40, edgecolor="white", color=["blue", "orange"], label=["within", "between"], stacked = True)
+#    ax.set_title(title)
+#    ax.title.set_size(16)
+#    ax.tick_params(axis='both', labelsize=16)
+#    ax.grid(visible=True, axis="both")
+#    ax.legend()
+#    plt.show()
