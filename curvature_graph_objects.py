@@ -255,6 +255,8 @@ class CurvatureGraph(nx.Graph):
         """
         print(colors)
         try:
+            print(colors)
+            
             if colors:
                 print([
                     [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
