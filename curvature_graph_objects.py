@@ -270,8 +270,6 @@ class CurvatureGraph(nx.Graph):
 
                 except KeyError:
                     print("Need to compute the communities first.")
-                    self.assign_edges()
-                    self.plot_curvature_histogram(curvature, title, colors)
 
             else:
                 vis.plot_curvature_hist(
