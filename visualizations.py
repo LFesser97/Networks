@@ -239,7 +239,7 @@ def get_bin_width (b_min, b_max, num_bin_lim):
 
 # changed the name of this
 # def show_histo(h_data, title_str, my_bin_num = 40):
-def plot_curvature_hist_colors(h_data, title_str, my_bin_num = 40):
+def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
     """
     Show the histogram for the given data. 
 

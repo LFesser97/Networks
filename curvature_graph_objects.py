@@ -259,10 +259,10 @@ class CurvatureGraph(nx.Graph):
                 [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
                 [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]])
 
-        vis.plot_curvature_hist_colors([
-            [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
+        vis.plot_curvature_hist_colors(
+            [[self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
             [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]],
-            title = title
+            title_str = title)
 
         """
         try:
