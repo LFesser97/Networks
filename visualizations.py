@@ -266,7 +266,7 @@ def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
                     histtype='bar', 
                     stacked=True)
 
-    ax.set_title(title_str)
+    #ax.set_title(title_str)
     ax.title.set_size(16)
     ax.tick_params(axis='both', labelsize=16)
     ax.grid(visible=True, axis="both")

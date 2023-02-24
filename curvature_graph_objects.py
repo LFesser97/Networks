@@ -260,14 +260,18 @@ class CurvatureGraph(nx.Graph):
         #    title_str = title)
 
         try:
-
             if colors:
+                try:
+                    vis.plot_curvature_hist_colors([
+                        [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
+                        [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]],
+                        title_str = title
+                    )
 
-                vis.plot_curvature_hist_colors([
-                    [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
-                    [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]],
-                    title_str = title
-                )
+                except KeyError:
+                    print("Need to compute the communities first.")
+                    self.assign_edges()
+                    self.plot_curvature_histogram(curvature, title, colors)
 
             else:
                 vis.plot_curvature_hist(
