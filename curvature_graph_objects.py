@@ -47,7 +47,7 @@ class CurvatureGraph(nx.Graph):
 
 
     def plot_curvature_graph(self,
-                            pos = nx.kamada_kawai_layout, 
+                            pos = None, 
                             node_col = "white", 
                             edge_lst = [], 
                             edge_col = "lightgrey", 
@@ -59,7 +59,7 @@ class CurvatureGraph(nx.Graph):
         Plot the curvature graph.
         """
         vis.plot_my_graph(self, 
-                          pos, 
+                          pos = nx.kamada_kawai_layout(self), 
                           node_col, 
                           edge_lst, 
                           edge_col, 
