@@ -58,15 +58,15 @@ class CurvatureGraph(nx.Graph):
         """
         Plot the curvature graph.
         """
-        vis.plot_my_graph(self, 
-                          pos = nx.kamada_kawai_layout(self), 
+        vis.plot_my_graph(self,  
                           node_col, 
                           edge_lst, 
                           edge_col, 
                           edge_lab, 
                           bbox, 
                           color_map, 
-                          alpha)
+                          alpha,
+                          pos = nx.kamada_kawai_layout(self))
 
 
     def get_cycles(self):
