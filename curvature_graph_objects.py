@@ -345,7 +345,7 @@ class CurvatureSBM(CurvatureGraph):
 
             except KeyError:
                 af.set_node_colors(self)
-                self.plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
+                # self.plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
 
         return super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
 
