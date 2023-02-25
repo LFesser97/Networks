@@ -195,24 +195,6 @@ def save_pos_layout(pos, fn = ""):
         save_data_to_json_file(pos_array_as_list(pos), full_fn)
 
 
-def set_node_colors(G):
-    """
-    Set node colors for network layout.
-    Only used for SBM.
-
-    Parameters
-    ----------
-    G : networkx graph
-        Graph to be drawn.
-
-    Returns
-    -------
-    None.
-    """
-    for node in G.nodes:
-        G.nodes[node]["color"] = G.nodes[node]["block"]
-
-
 def save_pos_sbm(p,k,n):
     """
     Save positions of nodes for network layout.
