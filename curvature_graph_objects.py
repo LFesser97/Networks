@@ -475,6 +475,20 @@ class CurvatureHBG(CurvatureGraph):
         """
         pass # to be implemented
 
+    def plot_curvature_graph(self, ):
+        """
+        Plot the graph with the nodes colored by their block affiliation.
+        """
+        top_nodes = {n for n, d in self.nodes(data=True) if d["bipartite"] == 0}
+        bottom_nodes = set(self) - top_nodes
+
+        pos = nx.bipartite_layout(self, top_nodes)
+
+        vis.plot_my_graph(self, pos,
+                  node_col = [["A1","A2","B1","B2"].index(d["group"])  for n,d in self.nodes.data()],
+                  edge_col = [["pink","lightgrey"][d["prob"]]  for u,v,d in self.edges.data()],
+                  color_map = "tab20", alpha = 0.7)
+
 
 # define subclasses for real graphs
 
