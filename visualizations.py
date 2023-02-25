@@ -19,9 +19,7 @@ import os
 import json
 
 
-def plot_my_graph(G, pos, ax = None, node_col = "white", 
-                  edge_lst = [], edge_col = "lightgrey", edge_lab = {},
-                  bbox = None, color_map = "Set3", alpha = 1.0):
+def plot_my_graph(G, pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha):
     """
     Plot a graph with the given node and edge colors.
 
@@ -32,9 +30,6 @@ def plot_my_graph(G, pos, ax = None, node_col = "white",
 
     pos : dict
         A dictionary with nodes as keys and positions as values.
-
-    ax : matplotlib axis, optional
-        The axis to draw the graph on.
 
     node_col : list, optional
         A list of node colors.
@@ -84,6 +79,7 @@ def plot_my_graph(G, pos, ax = None, node_col = "white",
                                  bbox = bbox)
     plt.gca().margins(0.20)
     plt.show()
+
 
 def set_edge_colors(G,a,thr=0):
     """

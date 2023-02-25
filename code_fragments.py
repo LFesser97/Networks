@@ -168,3 +168,48 @@ def calculate_karate_club ():
     show_histos(G,1)
 
 """ NEED TO REVISIT THE CODE ABOVE THIS LINE """
+
+
+def compute_afrc_4(G, e):
+    """
+    Compute the Augmented Forman-Ricci curvature with 4-cycles for a given edge e.
+
+    Parameters
+    ----------
+    G : networkx.Graph
+        The input graph.
+
+    e : tuple
+        The edge for which we compute the Augmented Forman-Ricci curvature.
+
+    Returns
+    -------
+    curvature : float
+        The Augmented Forman-Ricci curvature of the edge e.
+    """
+
+    # make sure the edge has the correct orientation
+    edge = (min(e), max(e))
+
+    # get the list of all 3-cycles containing the edge
+    triangles = [(cycle) for cycle in G.cycles["triangles"] if edge[0] in cycle and edge[1] in cycle]
+
+    # sort every cycle in triangles in ascending order and remove duplicates
+    triangles = list(set([tuple(sorted(triangle)) for triangle in triangles]))
+
+    # get the list of all 4-cycles containing the edge
+    quadrangles = [(cycle) for cycle in G.cycles["quadrangles"] if edge[0] in cycle and edge[1] in cycle]
+
+    # sort every cycle in quadrangles in ascending order and remove duplicates
+    quadrangles = list(set([tuple(sorted(quadrangle)) for quadrangle in quadrangles]))
+
+    # compute other contributions
+        # need to rotate the cycles from (v_1, a, b, v_2) to (a, b, v_1, v_2)
+        # i.e. so that the edge is the first two vertices
+
+    
+        
+
+
+    # compute the curvature
+    curvature = 2 + len(triangles) + len(quadrangles) - other_contributions

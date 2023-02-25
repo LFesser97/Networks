@@ -46,6 +46,29 @@ class CurvatureGraph(nx.Graph):
             self.edges[edge]["weight"] = 1
 
 
+    def plot_curvature_graph(self,
+                            pos = nx.kamada_kawai_layout, 
+                            node_col = "white", 
+                            edge_lst = [], 
+                            edge_col = "lightgrey", 
+                            edge_lab = {},
+                            bbox = None,
+                            color_map = "Set3",
+                            alpha = 1.0):
+        """
+        Plot the curvature graph.
+        """
+        vis.plot_my_graph(self, 
+                          pos, 
+                          node_col, 
+                          edge_lst, 
+                          edge_col, 
+                          edge_lab, 
+                          bbox, 
+                          color_map, 
+                          alpha)
+
+
     def get_cycles(self):
         """
         Get the cycles of the graph.
@@ -253,11 +276,6 @@ class CurvatureGraph(nx.Graph):
         None.
             Plots the histogram.
         """
-
-        #vis.plot_curvature_hist_colors(
-        #    [[self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
-        #    [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]],
-        #    title_str = title)
 
         try:
             if colors:
