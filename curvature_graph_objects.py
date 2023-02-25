@@ -417,7 +417,14 @@ class CurvatureDC_SBM(CurvatureGraph):
 
         super().__init__(G)
 
-        # add note attributes from the block dictionary?
+    def plot_curvature_graph(self, pos=None, node_col="white", edge_lst=[], edge_col="lightgrey", edge_lab={}, bbox=None, color_map="Set3", alpha=1):
+        """
+        Plot the graph with the nodes colored by their block affiliation.
+        """
+        if node_col == "white":
+            node_col = [self.nodes[node]["block"] for node in self.nodes]
+
+        super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
 
 
     def compute_curvature_gap(self, curv_name, cmp_key = "community"):
