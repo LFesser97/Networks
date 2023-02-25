@@ -273,9 +273,9 @@ def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
     print("min_val = ", min_val)
     print("max_val = ", max_val)
 
-    #bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(min, max, my_bin_num)
+    bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(min_val, max_val, my_bin_num)
     ax.hist(h_data,  # used to be h_data[k]["curv"]
-                    #bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
+                    bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
                     edgecolor = "white", 
                     histtype='bar', 
                     stacked=True)
