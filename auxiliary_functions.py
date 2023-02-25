@@ -194,9 +194,10 @@ def save_pos_layout(pos, fn = ""):
         full_fn = os.path.join(cwd, fn)
         save_data_to_json_file(pos_array_as_list(pos), full_fn)
 
-def set_node_blocks(G,C):
+
+def set_node_colors(G):
     """
-    Set node blocks and colors for network layout.
+    Set node colors for network layout.
     Only used for SBM.
 
     Parameters
@@ -204,17 +205,13 @@ def set_node_blocks(G,C):
     G : networkx graph
         Graph to be drawn.
 
-    C : list
-        List of communities.
-
     Returns
     -------
     None.
     """
-    for i,c in enumerate(C):
-        for u in c:
-            G.nodes[u]["block"] = i
-            G.nodes[u]["color"] = i
+    for node in G.nodes:
+        G.nodes[node]["color"] = G.nodes[node]["block"]
+
 
 def save_pos_sbm(p,k,n):
     """

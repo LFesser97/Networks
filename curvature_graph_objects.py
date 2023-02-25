@@ -335,6 +335,20 @@ class CurvatureSBM(CurvatureGraph):
         """
         self = af.assign_edges(self, "block")
 
+    def plot_curvature_graph(self, pos=None, node_col="white", edge_lst=[], edge_col="lightgrey", edge_lab={}, bbox=None, color_map="Set3", alpha=1):
+        """
+        Plot the graph with the nodes colored by their block affiliation.
+        """
+        if node_col == "white":
+            try:
+                node_col = [self.nodes[node]["color"] for node in self.nodes]
+
+            except KeyError:
+                af.set_node_colors(self)
+                self.plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
+
+        return super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
+
 
 class CurvatureDC_SBM(CurvatureGraph):
     """
