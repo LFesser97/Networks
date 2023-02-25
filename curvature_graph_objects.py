@@ -342,7 +342,7 @@ class CurvatureSBM(CurvatureGraph):
         if node_col == "white":
             node_col = [self.nodes[node]["block"] for node in self.nodes]
 
-        self.plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
+        super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
 
 
 class CurvatureDC_SBM(CurvatureGraph):
