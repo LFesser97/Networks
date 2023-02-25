@@ -426,7 +426,6 @@ class CurvatureDC_SBM(CurvatureGraph):
 
         super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
 
-
     def compute_curvature_gap(self, curv_name, cmp_key = "community"):
         """
         Compute the curvature gap for the graph.
@@ -484,10 +483,15 @@ class CurvatureHBG(CurvatureGraph):
 
         pos = nx.bipartite_layout(self, top_nodes)
 
-        vis.plot_my_graph(self, pos,
-                  node_col = [["A1","A2","B1","B2"].index(d["group"])  for n,d in self.nodes.data()],
-                  edge_col = [["pink","lightgrey"][d["prob"]]  for u,v,d in self.edges.data()],
-                  color_map = "tab20", alpha = 0.7)
+        vis.plot_my_graph(self, 
+                            pos,
+                            node_col = [["A1","A2","B1","B2"].index(d["group"])  for n,d in self.nodes.data()],
+                            edge_lst=[],
+                            edge_col = [["pink","lightgrey"][d["prob"]]  for u,v,d in self.edges.data()],
+                            edge_lab={}, 
+                            bbox=None,
+                            color_map = "tab20", 
+                            alpha = 0.7)
 
 
 # define subclasses for real graphs
