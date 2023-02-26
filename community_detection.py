@@ -88,8 +88,9 @@ def detect_communities(G, curvature, threshold):
     C = [c for c in sorted(nx.connected_components(G_copy), key=len, reverse=True)]
 
     # Create list of tupels with node names and cluster labels, set node colors acc to cluster
-    G_copy = set_node_labels(G_copy,C, curvature)
-    return G_copy
+    #G_copy = set_node_labels(G_copy,C, curvature)
+    #return G_copy
+    set_node_labels(G,C, curvature)
 
 
 # helper functions
@@ -202,7 +203,7 @@ def set_node_labels(G, C, curvature):
     for i,c in enumerate(C):
         for u in c:
             G.nodes[u][curvature + "_community"] = i
-    return G
+    #return G
 
 
 # Non-sequential community detection
