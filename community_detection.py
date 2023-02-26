@@ -48,48 +48,59 @@ def detect_communities(G, curvature, threshold):
     # set graph attributes and calculate initial AFRC values
     curv_min, curv_max = get_min_max_curv_values(G_copy, curvature)
 
-    # collect edges with minimal negative curvature
-    below_list = sorted([edge for edge in G_copy.edges.data()  if (edge[2][curvature] < threshold)], key = lambda edge: edge[2][curvature])
-    min_list   = [edge for edge in below_list  if (edge[2][curvature] == curv_min)]
+    # collect edges with extremal negative curvature
+    if curvature == "afrc":
+        threshold_list = [edge for edge in G_copy.edges.data()  if (edge[2][curvature] > threshold)]
+        val_list   = [edge for edge in threshold_list  if (edge[2][curvature] == curv_max)]
+
+    else:
+        threshold_list = [edge for edge in G_copy.edges.data()  if (edge[2][curvature] < threshold)]
+        val_list   = [edge for edge in threshold_list  if (edge[2][curvature] == curv_min)]
+
+    # below_list = sorted([edge for edge in G_copy.edges.data()  if (edge[2][curvature] < threshold)], key = lambda edge: edge[2][curvature])
+    # min_list   = [edge for edge in below_list  if (edge[2][curvature] == curv_min)]
     
-    while len(min_list) > 0:      
-        if len(min_list) == 1:
+    while len(val_list) > 0:      
+        if len(val_list) == 1:
             # edge is the only element in the list
-            minimum = min_list[0]
+            extremum = val_list[0]
         else:
             # edge is randomly chosen from the list
-            minimum = select_an_edge(min_list)
+            extremum = select_an_edge(val_list)
 
-        (u,v) = minimum[:2]
-        below_list.remove(minimum)
+        (u,v) = extremum[:2]
+        threshold_list.remove(extremum)
 
         # remove chosen edge
         G_copy.remove_edge(u,v)
         affecteds = list(G_copy.edges([u,v]))
-        below_edges = [(u,v)  for u,v,d in below_list]
+        threshold_edges = [(u,v)  for u,v,d in threshold_list]
 
         # update graph attributes and calculate new curvature values
         if curvature == "frc":
-            G_copy.compute_frc(affected_edges = affecteds + below_edges)
+            G_copy.compute_frc(affected_edges = affecteds + threshold_edges)
 
         elif curvature == "afrc":
-            G_copy.compute_afrc(affected_edges = affecteds + below_edges)
+            G_copy.compute_afrc(affected_edges = affecteds + threshold_edges)
 
         elif curvature == "orc":
-            G_copy.compute_orc(affected_edges = affecteds + below_edges)
+            G_copy.compute_orc(affected_edges = affecteds + threshold_edges)
 
-        curv_min, curv_max = get_min_max_curv_values(G_copy, curvature, affecteds + below_edges)
+        curv_min, curv_max = get_min_max_curv_values(G_copy, curvature, affecteds + threshold_edges)
         
-        # collect edges with minimal negative curvature
-        below_list = sorted([edge for edge in G_copy.edges.data()  if (edge[2][curvature] < threshold)], key = lambda edge: edge[2][curvature])
-        min_list   = [edge for edge in below_list  if (edge[2][curvature] == curv_min)]
-        
+        # collect edges with extremal negative curvature
+        if curvature == "afrc":
+            threshold_list = [edge for edge in G_copy.edges.data()  if (edge[2][curvature] > threshold)]
+            val_list   = [edge for edge in threshold_list  if (edge[2][curvature] == curv_max)]    
+
+        else:
+            threshold_list = [edge for edge in G_copy.edges.data()  if (edge[2][curvature] < threshold)]
+            val_list   = [edge for edge in threshold_list  if (edge[2][curvature] == curv_min)]
+
     # determine connected components of graph with edges whose curvature is above threshold
     C = [c for c in sorted(nx.connected_components(G_copy), key=len, reverse=True)]
 
     # Create list of tupels with node names and cluster labels, set node colors acc to cluster
-    #G_copy = set_node_labels(G_copy,C, curvature)
-    #return G_copy
     set_node_labels(G,C, curvature)
 
 
