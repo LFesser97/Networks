@@ -45,9 +45,6 @@ def detect_communities(G, curvature, threshold):
     # create a copy of the graph
     G_copy = deepcopy(G)
 
-    # define a dictionary of curvatures as keys and methods as values
-    curv_funcs = {"frc" : G_copy.compute_frc, "afrc" : G_copy.compute_afrc, "orc" : G_copy.compute_orc}
-
     # set graph attributes and calculate initial AFRC values
     curv_min, curv_max = get_min_max_curv_values(G_copy, curvature)
 
@@ -72,7 +69,15 @@ def detect_communities(G, curvature, threshold):
         below_edges = [(u,v)  for u,v,d in below_list]
 
         # update graph attributes and calculate new curvature values
-        G_copy.curv_funcs[curvature](affected_edges = affecteds + below_edges)
+        if curvature == "frc":
+            G_copy.compute_frc(affected_edges = affecteds + below_edges)
+
+        elif curvature == "afrc":
+            G_copy.compute_afrc(affected_edges = affecteds + below_edges)
+
+        elif curvature == "orc":
+            G_copy.compute_orc(affected_edges = affecteds + below_edges)
+
         curv_min, curv_max = get_min_max_curv_values(G_copy, curvature, affecteds + below_edges)
         
         # collect edges with minimal negative curvature
