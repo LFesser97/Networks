@@ -26,6 +26,7 @@ import compute_curvatures as cc
 import auxiliary_functions as af
 import curvature_gaps as cg
 import visualizations as vis
+import community_detection as cd
 
 
 # define abstract class for curvature graphs
@@ -82,16 +83,19 @@ class CurvatureGraph(nx.Graph):
         self.cycles["pentagons"] = [cycle for cycle in all_cycles if len(cycle) == 5]
 
 
-    def compute_frc(self):
+    def compute_frc(self, affected_edges = None):
         """
         Compute the Forman-Ricci curvature of the graph.
         """
-        for edge in list(self.edges()):
+        if affected_edges is None:
+            affected_edges = self.edges()
+
+        for edge in list(affected_edges):
             u, v = edge
             self.edges[edge]['frc'] = cc.fr_curvature(self, u, v)
 
 
-    def compute_orc(self):
+    def compute_orc(self, affected_edges = None):
         """
         Compute the Ollivier-Ricci curvature of the graph.
         """
@@ -106,22 +110,26 @@ class CurvatureGraph(nx.Graph):
             self.edges[edge]["orc"] = G.edges[edge]["orc"]
 
 
-    def compute_afrc(self):
+    def compute_afrc(self, affected_edges = None):
         """
         Compute the correct augmented Forman-Ricci curvature of the graph.
         """
-        for edge in list(self.edges()):
+        if affected_edges is None:
+            affected_edges = self.edges()
 
-            # compute curvature
+        for edge in list(affected_edges):
             self.edges[edge]['afrc'] = cc.AugFormanSq(edge, self)
 
 
-    def compute_afrc_3(self):
+    def compute_afrc_3(self, affected_edges = None):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
         try:
-            for edge in list(self.edges()):
+            if affected_edges is None:
+                affected_edges = self.edges()
+
+            for edge in list(affected_edges):
                 u, v = edge
 
                 # compute curvature
@@ -136,12 +144,15 @@ class CurvatureGraph(nx.Graph):
             self.compute_afrc_3()
 
 
-    def compute_afrc_4(self):
+    def compute_afrc_4(self, affected_edges = None):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
         try:
-            for edge in list(self.edges()):
+            if affected_edges is None:
+                affected_edges = self.edges()
+
+            for edge in list(affected_edges):
                 u, v = edge
 
                 # compute curvature
@@ -158,12 +169,15 @@ class CurvatureGraph(nx.Graph):
             self.compute_afrc_4()
 
 
-    def compute_afrc_5(self):
+    def compute_afrc_5(self, affected_edges = None):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
         try:
-            for edge in list(self.edges()):
+            if affected_edges is None:
+                affected_edges = self.edges()
+
+            for edge in list(affected_edges):
                 u, v = edge
 
                 # compute curvature
@@ -196,6 +210,7 @@ class CurvatureGraph(nx.Graph):
             self.get_cycles()
             self.count_triangles()
             
+
     def count_quadrangles(self):
         """
         Count the number of quadrangles for each edge in the graph.
@@ -309,6 +324,43 @@ class CurvatureGraph(nx.Graph):
                 print("Augmented Forman-Ricci curvature not found. Computing it now.")
                 self.compute_afrc()
                 self.plot_curvature_histogram(curvature, colors)
+
+
+    def detect_communities(self, curvature, threshold = 0):
+        """
+        Detect communities using a curvature.
+
+        Parameters
+        ----------
+        curvature : str
+            The curvature to use for community detection. Can be "frc", "orc" or "afrc".
+
+        threshold : float, optional
+            The threshold for the curvature. The default is 0.
+
+        Returns
+        -------
+        None.
+            Adds the communities to the graph.
+        """
+        try:
+            self = cd.detect_communities(self, curvature, threshold)
+
+        except KeyError as error:
+            if error.args[0] == "frc":
+                print("Forman-Ricci curvature not found. Computing it now.")
+                self.compute_frc()
+                self.detect_communities(curvature, threshold)
+
+            elif error.args[0] == "orc":
+                print("Ollivier-Ricci curvature not found. Computing it now.")
+                self.compute_orc()
+                self.detect_communities(curvature, threshold)
+
+            elif error.args[0] == "afrc":
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
+                self.compute_afrc()
+                self.detect_communities(curvature, threshold)
 
 
 # define subclasses for artificial graphs
