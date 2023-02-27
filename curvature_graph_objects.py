@@ -629,4 +629,5 @@ class CurvatureScotland(CurvatureGraph):
     A subclass of CurvatureGraph specifically for the Corporate interlocks in Scotland graph.
     """
     def __init__(self):
-        super().__init__(nx.read_pajek("Network Models/Scotland.net"))
+        txt = open("Network Models/Scotland.net").readlines()
+        super().__init__(nx.read_pajek(txt))
