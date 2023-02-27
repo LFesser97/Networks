@@ -630,4 +630,5 @@ class CurvatureScotland(CurvatureGraph):
     """
     def __init__(self):
         txt = open("Network Models/Scotland.net").readlines()
-        super().__init__(nx.read_pajek(txt))
+        G = nx.parse_pajek(txt)
+        super().__init__(G)
