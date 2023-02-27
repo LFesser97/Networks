@@ -632,3 +632,7 @@ class CurvatureScotland(CurvatureGraph):
         txt = open("Network Models/Scotland.net").readlines()
         G = nx.parse_pajek(txt)
         super().__init__(G)
+
+        # relabel node names with integers using nx.relabel_nodes
+        mapping = dict(zip(self, range(len(self.nodes))))
+        self = nx.relabel_nodes(self, mapping, copy=False)
