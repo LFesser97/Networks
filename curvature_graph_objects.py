@@ -624,29 +624,9 @@ class CurvatureWordAdjacency(CurvatureGraph):
         self = nx.relabel_nodes(self, mapping, copy=False)
 
 
-
-
-
-
-
-    # needs an init method that takes the following arguments: SHOULD WE INHERIT THIS FROM networkx.Graph?!
-    # - l : number of communities
-    # - k : community sizes
-    # - p_out : inter-community edge probabilities
-    # - p_in : intra-community edge probabilities
-
-    # needs an attribute that assigns each node to a community
-    # needs an attribute that assigns each edge to inter- or intra-community
-    # add attributes for the curvatures of the graph, initialized as empty lists, fill when computed?!
-
-    # DONE: needs methods to compute the curvatures of the graph
-    # needs a method to compute the correlation between 2 curvatures of the graph
-    # needs a method to compute the curvature gap of the graph
-
-    # needs a method to plot a histogram of a specific curvature
-    # needs a method to return a plot with histograms of all curvatures
-    # needs a method to visualize the graph
-    # needs a method to save the graph as a json file
-    # needs a method to load a graph from a json file
-    # needs a method to run sequentual community detection on the graph
-    # needs a method to run parallel community detection on the graph
+class CurvatureScotland(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for the Corporate interlocks in Scotland graph.
+    """
+    def __init__(self):
+        super().__init__(nx.read_pajek("Network Models/Scotland.net"))
