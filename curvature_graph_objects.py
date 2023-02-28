@@ -644,4 +644,12 @@ class CurvatureScotland(CurvatureGraph):
         top = [n for n, d in self.nodes(data=True) if int(d["id"]) <= 108]
         bi_pos = nx.bipartite_layout(self, top)
 
-        super().plot_curvature_graph(self, pos = bi_pos)
+        vis.plot_my_graph(self,
+                            bi_pos,
+                            node_col = "black",
+                            edge_lst = [], 
+                            edge_col = "lightgrey", 
+                            edge_lab = {},
+                            bbox = None,
+                            color_map = "Set3",
+                            alpha = 1.0)
