@@ -696,7 +696,6 @@ class CurvatureSouthernWomen(CurvatureGraph):
         
 
     def plot_curvature_graph(self,
-                            pos,
                             node_col = "black",
                             edge_lst = [], 
                             edge_col = "lightgrey", 
