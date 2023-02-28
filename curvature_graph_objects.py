@@ -653,11 +653,69 @@ class CurvatureScotland(CurvatureGraph):
         bi_pos = nx.bipartite_layout(self, top)
 
         vis.plot_my_graph(self,
-                            bi_pos,
                             node_col,
                             edge_lst, 
                             edge_col, 
                             edge_lab,
                             bbox,
                             color_map,
-                            alpha)
+                            alpha,
+                            pos = bi_pos)
+        
+
+class CurvatureSouthernWomen(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for the Southern Women graph
+    """
+    def __init__(self):
+
+        # read in the data
+        filename = "Network Models/out.opsahl-southernwomen"
+        cwd = os.getcwd()
+        full_filename = os.path.join(cwd, "opsahl-southernwomen", filename)
+
+        fobj = open(full_filename)
+        lines = []
+        for line in fobj:
+            lines.append(line)
+
+        fobj.close()
+
+        lines = lines[2:]
+
+        # create the graph
+        edge_nodes = [[int(s)  for s in line.split()]  for line in lines]
+        edge_list = [(edge[0], edge[1] + 18)  for edge in edge_nodes]
+
+
+        G = nx.Graph()
+        G.add_edges_from(edge_list)
+
+        # initialize the graph object
+        super().__init__(G)
+        
+
+    def plot_curvature_graph(self,
+                            pos,
+                            node_col = "black",
+                            edge_lst = [], 
+                            edge_col = "lightgrey", 
+                            edge_lab = {},
+                            bbox = None,
+                            color_map = "Set3",
+                            alpha = 1.0):
+        """
+        Plot the Souterh Women network as a bipartite graph.
+        """
+        top = [n for n in self.nodes() if n <= 18]
+        bi_pos = nx.bipartite_layout(self, top)
+
+        vis.plot_my_graph(self,
+                            node_col,
+                            edge_lst, 
+                            edge_col, 
+                            edge_lab,
+                            bbox,
+                            color_map,
+                            alpha,
+                            pos = bi_pos)
