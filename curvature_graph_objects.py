@@ -672,7 +672,7 @@ class CurvatureSouthernWomen(CurvatureGraph):
         # read in the data
         filename = "Network Models/out.opsahl-southernwomen"
         cwd = os.getcwd()
-        full_filename = os.path.join(cwd, "opsahl-southernwomen", filename)
+        full_filename = os.path.join(cwd, filename)
 
         fobj = open(full_filename)
         lines = []
