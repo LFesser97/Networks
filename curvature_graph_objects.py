@@ -695,20 +695,21 @@ class CurvatureSouthernWomen(CurvatureGraph):
         super().__init__(G)
         
 
-    def plot_curvature_graph(self, node_col = "black"):
-
+    def plot_curvature_graph(self, ):
         """
-        Plot the Southern Women network as a bipartite graph.
+        Plot the Southern Women network.
         """
-        top = [n for n in self.nodes() if n <= 18]
-        bi_pos = nx.bipartite_layout(self, top)
+        top_nodes = {n for n in self.nodes() if n <= 18}
+        bottom_nodes = set(self) - top_nodes
 
-        vis.plot_my_graph(self,
-                            node_col,
-                            bi_pos,
-                            edge_lst = [], 
-                            edge_col = "lightgrey", 
-                            edge_lab = {},
-                            bbox = None,
-                            color_map = "Set3",
-                            alpha = 1.0)
+        pos = nx.bipartite_layout(self, top_nodes)
+
+        vis.plot_my_graph(self, 
+                            pos,
+                            node_col = "blue",
+                            edge_lst=[],
+                            edge_col = "lightgrey",
+                            edge_lab={}, 
+                            bbox=None,
+                            color_map = "tab20", 
+                            alpha = 0.7)
