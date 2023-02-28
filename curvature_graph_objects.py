@@ -636,3 +636,12 @@ class CurvatureScotland(CurvatureGraph):
         # relabel node names with integers using nx.relabel_nodes
         mapping = dict(zip(self, range(len(self.nodes))))
         self = nx.relabel_nodes(self, mapping, copy=False)
+
+    def plot_curvature_graph(self):
+        """
+        Plot the Scotland network as a bipartite graph.
+        """
+        top = [n for n, d in self.nodes(data=True) if int(d["id"]) <= 108]
+        bi_pos = nx.bipartite_layout(self, top)
+
+        super().plot_curvature_graph(self, pos = bi_pos)
