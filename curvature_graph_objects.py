@@ -705,7 +705,7 @@ class CurvatureSouthernWomen(CurvatureGraph):
 
         vis.plot_my_graph(self,
                             node_col,
-                            pos = bi_pos,
+                            bi_pos,
                             edge_lst = [], 
                             edge_col = "lightgrey", 
                             edge_lab = {},
