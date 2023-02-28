@@ -695,14 +695,8 @@ class CurvatureSouthernWomen(CurvatureGraph):
         super().__init__(G)
         
 
-    def plot_curvature_graph(self,
-                            node_col = "black",
-                            edge_lst = [], 
-                            edge_col = "lightgrey", 
-                            edge_lab = {},
-                            bbox = None,
-                            color_map = "Set3",
-                            alpha = 1.0):
+    def plot_curvature_graph(self, node_col = "black"):
+
         """
         Plot the Southern Women network as a bipartite graph.
         """
@@ -711,10 +705,10 @@ class CurvatureSouthernWomen(CurvatureGraph):
 
         vis.plot_my_graph(self,
                             node_col,
-                            edge_lst, 
-                            edge_col, 
-                            edge_lab,
-                            bbox,
-                            color_map,
-                            alpha,
-                            pos = bi_pos)
+                            pos = bi_pos,
+                            edge_lst = [], 
+                            edge_col = "lightgrey", 
+                            edge_lab = {},
+                            bbox = None,
+                            color_map = "Set3",
+                            alpha = 1.0)
