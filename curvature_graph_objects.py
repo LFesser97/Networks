@@ -705,7 +705,7 @@ class CurvatureSouthernWomen(CurvatureGraph):
                             color_map = "Set3",
                             alpha = 1.0):
         """
-        Plot the Souterh Women network as a bipartite graph.
+        Plot the Southern Women network as a bipartite graph.
         """
         top = [n for n in self.nodes() if n <= 18]
         bi_pos = nx.bipartite_layout(self, top)
