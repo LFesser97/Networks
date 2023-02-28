@@ -637,7 +637,15 @@ class CurvatureScotland(CurvatureGraph):
         mapping = dict(zip(self, range(len(self.nodes))))
         self = nx.relabel_nodes(self, mapping, copy=False)
 
-    def plot_curvature_graph(self):
+    def plot_curvature_graph(self,
+                            pos,
+                            node_col = "black",
+                            edge_lst = [], 
+                            edge_col = "lightgrey", 
+                            edge_lab = {},
+                            bbox = None,
+                            color_map = "Set3",
+                            alpha = 1.0):
         """
         Plot the Scotland network as a bipartite graph.
         """
@@ -646,10 +654,10 @@ class CurvatureScotland(CurvatureGraph):
 
         vis.plot_my_graph(self,
                             bi_pos,
-                            node_col = "black",
-                            edge_lst = [], 
-                            edge_col = "lightgrey", 
-                            edge_lab = {},
-                            bbox = None,
-                            color_map = "Set3",
-                            alpha = 1.0)
+                            node_col,
+                            edge_lst, 
+                            edge_col, 
+                            edge_lab,
+                            bbox,
+                            color_map,
+                            alpha)
