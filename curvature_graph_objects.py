@@ -637,7 +637,7 @@ class CurvatureScotland(CurvatureGraph):
         mapping = dict(zip(self, range(len(self.nodes))))
         self = nx.relabel_nodes(self, mapping, copy=False)
 
-    def plot_curvature_graph(self, ):
+    def plot_curvature_graph(self, node_col = "blue", ):
         """
         Plot the Southern Women network.
         """
@@ -648,7 +648,7 @@ class CurvatureScotland(CurvatureGraph):
 
         vis.plot_my_graph(self, 
                             pos,
-                            node_col = "blue",
+                            node_col,
                             edge_lst=[],
                             edge_col = "lightgrey",
                             edge_lab={}, 
