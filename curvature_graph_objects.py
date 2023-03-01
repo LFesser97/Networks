@@ -488,7 +488,7 @@ class CurvatureDC_SBM(CurvatureGraph):
         A = np.zeros((len(b), len(b)))
 
         for block_1 in range(B):
-            for block_2 in range(block_1, B):
+            for block_2 in range(block_1 + 1, B):
                 assert block_1 < block_2, "The block_1 must be less than block_2."
 
                 # get the degrees of the nodes in node_1 and node_2, store them in two lists
