@@ -679,7 +679,7 @@ class CurvatureSouthernWomen(CurvatureGraph):
 
         # create the graph
         edge_nodes = [[int(s)  for s in line.split()]  for line in lines]
-        edge_list = [(edge[0], edge[1] + 18)  for edge in edge_nodes]
+        edge_list = [(edge[0] - 1, edge[1] + 17)  for edge in edge_nodes]
 
 
         G = nx.Graph()

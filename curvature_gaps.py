@@ -52,7 +52,7 @@ def compute_curvature_gap(Gr, curv_name, cmp_key="block"):
         c_dict[k][curv_name]["std"] = np.std(c_dict[k][curv_name]["data"])        
             
     res_diffs = {}
-    sum_std = np.sqrt(np.square(c_dict["withins"][curv_name]["std"]) + np.square(c_dict["betweens"][curv_name]["std"]))  
+    sum_std = np.sqrt(0.5 * (np.square(c_dict["withins"][curv_name]["std"]) + np.square(c_dict["betweens"][curv_name]["std"])))  
     res_diffs[curv_name] = np.abs((c_dict["withins"][curv_name]["mean"] - c_dict["betweens"][curv_name]["mean"]) / sum_std)   
     
     return res_diffs
