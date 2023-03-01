@@ -27,6 +27,7 @@ import auxiliary_functions as af
 import curvature_gaps as cg
 import visualizations as vis
 import community_detection as cd
+import create_networks as cn
 
 
 # define abstract class for curvature graphs
@@ -45,6 +46,46 @@ class CurvatureGraph(nx.Graph):
         self.curvature_gap = {}
         for edge in self.edges:
             self.edges[edge]["weight"] = 1
+        self.pos = None
+
+
+    def read_pos_from_json(self, filename):
+        """
+        Read positions from json file.
+
+        Parameters
+        ----------
+        filename : str
+            Name of the file to be read.
+
+        Returns
+        -------
+        None.
+            Attaches the positions to the attribute self.pos as a dictionary.
+        """
+        dict_pos = af.read_data_from_json_file(filename)
+        dict_pos_array = af.pos_list_as_array(dict_pos)
+
+        self.pos = {int(k):v  for (k,v) in iter(dict_pos_array.items())}
+
+
+    def save_pos_to_json(self, filename):
+        """
+        Save positions to json file.
+
+        Parameters
+        ----------
+        filename : str
+            Name of the file to be saved.
+
+        Returns
+        -------
+        None.
+        """
+        cwd = os.getcwd()
+        full_filename = os.path.join(cwd, "pos_karate_club_graph.json")
+
+        af.save_data_to_json_file(af.pos_array_as_list(self.pos), full_filename)
 
 
     def plot_curvature_graph(self,
@@ -401,31 +442,39 @@ class CurvatureDC_SBM(CurvatureGraph):
     """
     A subclass of CurvatureGraph specifically for degree-corrected stochastic block models.
     """
-    def __init__(self, b, B, k, E):
+    def __init__(self, N, B, alpha, beta):
         """
         Initialize a degree-corrected stochastic block model.
 
         Parameters
         ----------
-        b : list
-            A list of the Block affiliation of each node.
-            # [1, 1, 1, 3, 4, 6, 2, 0, 5]
+        N : int
+            The number of nodes in the model.
 
         B : int
             The number of blocks in the model.
 
-        k : list
-            A list of the degrees of the nodes. 
-            # [3, 4, 5, 2, 1, 3, 2, 1, 2]
+        alpha : float
+            The parameter of the Zipf distribution from which the degrees are drawn.
+            Normally between 1 and 2.
 
-        E : dict
-            A dictionary of the number of edges between the blocks. With sets as keys.
+        beta : float
+            Parameter to regulate the number of edges between blocks, between 0 and 1.
 
         Returns
         -------
         G : nx.Graph
             A degree-corrected stochastic block model.
         """
+        # assign N nodes randomly to B blocks in a list
+        b = list(np.random.randint(0, B, N))
+
+        # draw the degrees of the nodes from a Zipf distribution with parameter alpha
+        k = list(np.random.zipf(alpha, N))
+
+        # get the number of edges between blocks
+        E = cn.determine_between_edges(b, k, B, beta)
+
         assert len(b) == len(k), "The length of b and k must be the same."
 
         # create a dictionary with blocks as keys, and lists of nodes and degrees as values
