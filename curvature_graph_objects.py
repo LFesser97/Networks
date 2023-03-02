@@ -478,7 +478,7 @@ class CurvatureDC_SBM(CurvatureGraph):
         assert len(b) == len(k), "The length of b and k must be the same."
 
         # create a dictionary with blocks as keys, and lists of nodes and degrees as values
-        block_dict = {block: ([], []) for block in range(B)}
+        block_dict = {block: [[], []] for block in range(B)}
 
         for node in range(len(b)):
             block_dict[b[node]][0].append(node)
