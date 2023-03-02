@@ -510,9 +510,7 @@ class CurvatureDC_SBM(CurvatureGraph):
                 block_dict[block_2][1] = new_list_2
 
         # create the graph
-        H = nx.from_numpy_array(A)
-        G = nx.MultiGraph()
-        G.add_edges_from(H.edges)
+        G = nx.from_numpy_array(A, parallel_edges = True, create_using = nx.MultiGraph())
 
         # for each degree sequence in the dictionary, create a graph according to the configuration model
         for block in range(B):
