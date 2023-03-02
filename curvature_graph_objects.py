@@ -519,6 +519,10 @@ class CurvatureDC_SBM(CurvatureGraph):
                 # if so, increase the degree of a random node by 1
                 block_dict[block][1][np.random.randint(0, len(block_dict[block][1]))] += 1
 
+            # compose the graph with the configuration model
+            print(type(G))
+            print(type(nx.configuration_model(block_dict[block][1])))
+
             G = nx.compose(G, nx.configuration_model(block_dict[block][1]))
 
         super().__init__(G)
