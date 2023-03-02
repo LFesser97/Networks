@@ -510,7 +510,9 @@ class CurvatureDC_SBM(CurvatureGraph):
                 block_dict[block_2][1] = new_list_2
 
         # create the graph
-        G = nx.from_numpy_array(A)
+        H = nx.from_numpy_array(A)
+        G = nx.MultiGraph()
+        G.add_edges_from(H.edges)
 
         # for each degree sequence in the dictionary, create a graph according to the configuration model
         for block in range(B):
@@ -527,6 +529,7 @@ class CurvatureDC_SBM(CurvatureGraph):
 
         super().__init__(G)
 
+
     def plot_curvature_graph(self, pos=None, node_col="white", edge_lst=[], edge_col="lightgrey", edge_lab={}, bbox=None, color_map="Set3", alpha=1):
         """
         Plot the graph with the nodes colored by their block affiliation.
@@ -536,11 +539,13 @@ class CurvatureDC_SBM(CurvatureGraph):
 
         super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
 
+
     def compute_curvature_gap(self, curv_name, cmp_key = "community"):
         """
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key)
+
 
     def assign_edges(self):
         """
