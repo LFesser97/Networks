@@ -475,6 +475,8 @@ class CurvatureDC_SBM(CurvatureGraph):
         # get the number of edges between blocks
         E = cn.determine_between_edges(b, k, B, beta)
 
+        print(E)
+
         assert len(b) == len(k), "The length of b and k must be the same."
 
         # create a dictionary with blocks as keys, and lists of nodes and degrees as values
@@ -483,6 +485,8 @@ class CurvatureDC_SBM(CurvatureGraph):
         for node in range(len(b)):
             block_dict[b[node]][0].append(node)
             block_dict[b[node]][1].append(k[node])
+
+        print(block_dict)
 
         # initialize the adjacency matrix
         A = np.zeros((len(b), len(b)))
@@ -506,6 +510,8 @@ class CurvatureDC_SBM(CurvatureGraph):
                     A[block_dict[block_2][0][edge[1]], block_dict[block_1][0][edge[0]]] = 1
 
                 # update the degree lists in the dictionary
+                print(block_dict[block_1][1])
+
                 block_dict[block_1][1] = new_list_1
                 block_dict[block_2][1] = new_list_2
 
