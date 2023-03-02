@@ -497,8 +497,12 @@ class CurvatureDC_SBM(CurvatureGraph):
                 # get the number of edges between the two blocks
                 num_edges = E[(block_1, block_2)]
 
+                print(num_edges)
+
                 # draw the edges between the two blocks, update the degree lists
                 edges_between, new_list_1, new_list_2 = af.get_edges_between_blocks(k_1, k_2, num_edges)
+
+                print(edges_between)
 
                 # update the adjacency matrix
                 for edge in edges_between:
@@ -506,9 +510,7 @@ class CurvatureDC_SBM(CurvatureGraph):
                     A[block_dict[block_2][0][edge[1]], block_dict[block_1][0][edge[0]]] = 1
 
                 # update the degree lists in the dictionary
-                print(block_dict[block_1][1])
                 print("type:" + str(type(block_dict[block_1][1])))
-                print(new_list_1)
                 print("type:" + str(type(new_list_1)))
 
                 block_dict[block_1][1] = new_list_1
