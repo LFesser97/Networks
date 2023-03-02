@@ -528,8 +528,8 @@ class CurvatureDC_SBM(CurvatureGraph):
         super().__init__(G)
 
         # assign the nodes to blocks
-        # for node in range(len(b)):
-        #    self.nodes[node]["block"] = b[node]
+        for node in range(len(b)):
+            self.nodes[node]["block"] = b[node]
 
 
     def plot_curvature_graph(self, pos=None, node_col="white", edge_lst=[], edge_col="lightgrey", edge_lab={}, bbox=None, color_map="Set3", alpha=1):
