@@ -475,8 +475,6 @@ class CurvatureDC_SBM(CurvatureGraph):
         # get the number of edges between blocks
         E = cn.determine_between_edges(b, k, B, beta)
 
-        print(E)
-
         assert len(b) == len(k), "The length of b and k must be the same."
 
         # create a dictionary with blocks as keys, and lists of nodes and degrees as values

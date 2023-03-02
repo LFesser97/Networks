@@ -67,10 +67,10 @@ def determine_between_edges(node_affiliations, node_degrees, num_blocks, param):
     for i in range(num_blocks):
         for j in range(i, num_blocks):
             if i == j:
-                between_edges[(i, j)] = 0
+                between_edges[{i, j}] = 0
             else:
-                between_edges[(i, j)] = np.random.randint(0, param * min(block_degrees[i], block_degrees[j]))
-                block_degrees[i] -= between_edges[(i, j)]
-                block_degrees[j] -= between_edges[(i, j)]
+                between_edges[{i, j}] = np.random.randint(0, param * min(block_degrees[i], block_degrees[j]))
+                block_degrees[i] -= between_edges[{i, j}]
+                block_degrees[j] -= between_edges[{i, j}]
 
     return between_edges
