@@ -486,8 +486,6 @@ class CurvatureDC_SBM(CurvatureGraph):
             block_dict[b[node]][0].append(node)
             block_dict[b[node]][1].append(k[node])
 
-        print(block_dict)
-
         # initialize the adjacency matrix
         A = np.zeros((len(b), len(b)))
 
@@ -511,6 +509,9 @@ class CurvatureDC_SBM(CurvatureGraph):
 
                 # update the degree lists in the dictionary
                 print(block_dict[block_1][1])
+                print("type:" + str(block_dict[block_1][1]))
+                print(new_list_1)
+                print("type:" + str(new_list_1))
 
                 block_dict[block_1][1] = new_list_1
                 block_dict[block_2][1] = new_list_2
