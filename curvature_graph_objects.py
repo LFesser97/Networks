@@ -497,12 +497,8 @@ class CurvatureDC_SBM(CurvatureGraph):
                 # get the number of edges between the two blocks
                 num_edges = E[(block_1, block_2)]
 
-                print(num_edges)
-
                 # draw the edges between the two blocks, update the degree lists
                 edges_between, new_list_1, new_list_2 = af.get_edges_between_blocks(k_1, k_2, num_edges)
-
-                print(edges_between)
 
                 # update the adjacency matrix
                 for edge in edges_between:
@@ -510,9 +506,6 @@ class CurvatureDC_SBM(CurvatureGraph):
                     A[block_dict[block_2][0][edge[1]], block_dict[block_1][0][edge[0]]] = 1
 
                 # update the degree lists in the dictionary
-                print("type:" + str(type(block_dict[block_1][1])))
-                print("type:" + str(type(new_list_1)))
-
                 block_dict[block_1][1] = new_list_1
                 block_dict[block_2][1] = new_list_2
 
@@ -521,6 +514,11 @@ class CurvatureDC_SBM(CurvatureGraph):
 
         # for each degree sequence in the dictionary, create a graph according to the configuration model
         for block in range(B):
+            # check if the sum of the degrees is odd
+            if sum(block_dict[block][1]) % 2 == 1:
+                # if so, increase the degree of a random node by 1
+                block_dict[block][1][np.random.randint(0, len(block_dict[block][1]))] += 1
+
             G = nx.compose(G, nx.configuration_model(block_dict[block][1]))
 
         super().__init__(G)
