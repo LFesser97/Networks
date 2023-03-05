@@ -404,7 +404,7 @@ class CurvatureGraph(nx.Graph):
             The threshold for the curvature.
         """
         try:
-            self.threshold[curv_name] = cg.find_threshold(self, curv_name, param, cmp_key)
+            self.threshold[curv_name] = float(cg.find_threshold(self, curv_name, param, cmp_key))
 
         except KeyError as error:
             if error.args[0] == "frc":
