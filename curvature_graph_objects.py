@@ -572,6 +572,8 @@ class CurvatureDC_SBM(CurvatureGraph):
         # for each degree sequence in the dictionary, create a graph according to the configuration model
         for block in range(B):
             # check if the sum of the degrees is odd
+            print(block_dict[block][1])
+
             if sum(block_dict[block][1]) % 2 == 1:
                 # if so, increase the degree of a random node by 1
                 block_dict[block][1][np.random.randint(0, len(block_dict[block][1]))] += 1
