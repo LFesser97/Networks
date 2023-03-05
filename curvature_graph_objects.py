@@ -122,7 +122,7 @@ class CurvatureGraph(nx.Graph):
         # store the detected communities in the attribute self.nodes[node]["louvain-community"]
         for i, community in enumerate(communities):
             for node in community:
-                self.nodes[node]["louvain-community"] = i
+                self.nodes[node]["louvain_community"] = i
 
 
     def get_cycles(self):
@@ -534,9 +534,6 @@ class CurvatureDC_SBM(CurvatureGraph):
                 block_dict[block][1][np.random.randint(0, len(block_dict[block][1]))] += 1
 
             # compose the graph with the configuration model
-            print(type(G))
-            print(type(nx.configuration_model(block_dict[block][1])))
-
             G = nx.compose(G, nx.configuration_model(block_dict[block][1]))
 
         super().__init__(G)
@@ -576,6 +573,18 @@ class CurvatureER(CurvatureGraph):
     """
     def __init__(self, n, p):
         super().__init__(nx.erdos_renyi_graph(n, p))
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        try:
+            self = af.assign_edges(self, "louvain_community")
+
+        except KeyError:
+            print("No Louvain communities detected. Computing them now.")
+            self.detect_louvain_communities()
+            self.assign_edges()
     
 
 class CurvatureBG(CurvatureGraph):
