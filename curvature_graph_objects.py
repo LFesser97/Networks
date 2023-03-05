@@ -527,6 +527,7 @@ class CurvatureDC_SBM(CurvatureGraph):
 
         # draw the degrees of the nodes from a Poisson distribution with parameter alpha
         k = list(np.random.poisson(alpha, N))
+        print(k)
 
         # get the number of edges between blocks
         E = cn.determine_between_edges(b, k, B, beta)
