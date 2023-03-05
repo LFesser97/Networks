@@ -572,16 +572,18 @@ class CurvatureDC_SBM(CurvatureGraph):
         # for each degree sequence in the dictionary, create a graph according to the configuration model
         for block in range(B):
             # check if the sum of the degrees is odd
-            print(block_dict[block][1])
+            print("Block:" + str(block))
+            print("Degree distribution: " + str(block_dict[block][1]))
 
             if sum(block_dict[block][1]) % 2 == 1:
                 # if so, increase the degree of a random node by 1
                 block_dict[block][1][np.random.randint(0, len(block_dict[block][1]))] += 1
 
             # compose the graph with the configuration model
-            print(G.edges())
-            
-            G = nx.compose(G, nx.configuration_model(block_dict[block][1]))
+            H = nx.configuration_model(block_dict[block][1])
+            print("Edges in the current block: " + str(H.edges))
+
+            G = nx.compose(G, H)
 
         super().__init__(G)
 
