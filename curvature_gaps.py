@@ -17,6 +17,8 @@ from copy import deepcopy
 import networkx.algorithms.community as nx_comm
 import os
 import json
+import sklearn
+from sklearn.mixture import GaussianMixture
 
 
 def compute_curvature_gap(Gr, curv_name, cmp_key="block"):
@@ -58,148 +60,44 @@ def compute_curvature_gap(Gr, curv_name, cmp_key="block"):
     return res_diffs
 
 
-def calculate_SBM_cycle_weight_var():
+def find_threshold(G, curv_name, param, cmp_key):
     """
-    Calculate the curvature gaps for the SBM with different cycle weights.
+    Model the curvature distribution with a mixture of two Gaussians.
+    Find the midpoint between the means of the two Gaussians.
 
     Parameters
     ----------
-    None
-
-    Returns
-    -------
-    None
-    """
-    k_def = 20
-    l_def = 3
-    p_in_def = 0.7
-    p_out_def = 0.05
-    cycle_weights = [(0.4, 0.2), (0.8, 0.4), (1.2, 0.6), (1.6, 0.8), (2.0, 1.0)]
-    for cw in cycle_weights :
-        (q,p)  = cw
-        s = "Variation of cycle weights / quad weight = " + str(q) + "pent weight = " + str(p) + "\n" + \
-            "k=" + str(k_def) + " l=" + str(l_def) + " p_in:" + str(p_in_def) + " p_out:" + str(p_out_def)
-        calculate_SBM(k_def, l_def, p_in_def, p_out_def, s, 3, q, p)
-
-
-def get_curvature_gap(Gr, curv_name="afrc", cmp_key="block"):
-    """
-    Get the curvature gap of the graph.
-    The curvature values are the ones stored in the graph.
-    The graph must have the attributes "orc", "frc", "afrc", "afrc4", "afrc5" for each edge.
-
-    Parameters
-    ----------
-    Gr : NetworkX graph
+    G : NetworkX
         An undirected graph.
 
-    Returns
-    -------
-    curv_gap : float
-        The curvature gap of the graph.
-    """
-    c_dict = {"withins": {}, "betweens": {}}
-    for k in c_dict.keys():
-        c_dict[k] = {"data": [], "mean": 0, "std": 0}
-        
-    for u,v,d in Gr.edges.data():                            
-        if Gr.nodes[u][cmp_key] == Gr.nodes[v][cmp_key]:    
-            c_dict["withins"]["data"].append(Gr.edges[u,v][curv_name])            
-        else:                                               
-            c_dict["betweens"]["data"].append(Gr.edges[u,v][curv_name])      
+    curv_name : str
+        The name of the curvature to be used.
 
-    for k in c_dict.keys():
-        c_dict[k]["mean"] = np.mean(c_dict[k]["data"])      
-        c_dict[k]["std"] = np.std(c_dict[k]["data"])      
-            
-    sum_std = np.sqrt(np.square(c_dict["withins"]["std"]) + np.square(c_dict["betweens"]["std"]))   
-    curv_gap = np.abs((c_dict["withins"]["mean"] - c_dict["betweens"]["mean"]) / sum_std)   
-    
-    return curv_gap
+    param : float
+        The parameter that determines the threshold. Default is 0.5.
 
-
-def optimization_func(a, G, cmp_key="value"):
-    """
-    Optimization function for the curvature gap.
-
-    Parameters
-    ----------
-    a : array
-        An array of initial values for the optimization.
-
-    G : NetworkX graph
-        An undirected graph.
-
-    cmp_key : string
-        The key for the community attribute in the graph.
+    cmp_key : str
+        The key of the node attribute that contains the community assignment. Default is "block".
 
     Returns
     -------
-    c_gap : float
-        The curvature gap of the graph.
+    threshold : float
+        The midpoint between the means of the two Gaussians
     """
-    t = a[0]
-    if len(a) > 1:
-        q = a[1]
-    else:
-        q = 0
-    if len(a) > 2:
-        p = a[2]
-    else:
-        p = 0
-    get_edge_curvatures(G, t, q, p)
-    c_gap = -1 * get_curvature_gap(G, "afrc5", cmp_key)
 
-    return c_gap
-
-
-def maximize_curvature_gap(G, a, cmp_key = "value"):
-    """
-    Maximize the curvature gap of the graph.
-
-    Parameters
-    ----------
-    G : NetworkX graph
-        An undirected graph.
-
-    a : array
-        An array of initial values for the optimization.
-
-    cmp_key : string
-        The key for the community attribute in the graph.
-
-    Returns
-    -------
-    results : array
-        An array of the optimized curvature gap and the parameters.
-    """
-    results = []
-    for i in range(len(a)):
-        x0 = a[0:i+1]    # Initial values for t / t,q / t,q,p
-        res = minimize(optimization_func, x0, method='nelder-mead', args = (G, cmp_key), options={'disp': False})
-        results.extend([-1 * res.fun, *res.x])
-    return results
-
-
-def hbg_compute_curvature_gap(Gr, curv_name, cmp_key="prob"):
+    # get the curvature values of edges within and between communities
+    # assume that each edge already has the attribute "group" for within/between communities
+    c_dict = {"withins": [edge for edge in G.edges if G.edges[edge]["group"] == "within"], 
+              "betweens": [edge for edge in G.edges if G.edges[edge]["group"] == "between"]}        
     
-    c_dict = {"withins": {}, "betweens": {}}
+    # fit a mixture of two Gaussians to the curvature values of edges within and between communities
+    # using GaussianMixture.fit() from sklearn.mixture
     for k in c_dict.keys():
-        c_dict[k][curv_name] = {"data": [], "mean": 0, "std": 0}
-        
-    for u,v,d in Gr.edges.data():                       
-        if Gr.edges[u,v][cmp_key] == 1:                              
-            c_dict["withins"][curv_name]["data"].append(Gr.edges[u,v][curv_name]) 
-        else:                                               
-            c_dict["betweens"][curv_name]["data"].append(Gr.edges[u,v][curv_name])       
+        c_dict[k] = np.array([G.edges[edge][curv_name] for edge in c_dict[k]]).reshape(-1, 1)
 
-    for k in c_dict.keys():
-        c_dict[k][curv_name]["mean"] = np.mean(c_dict[k][curv_name]["data"])
-        c_dict[k][curv_name]["std"] = np.std(c_dict[k][curv_name]["data"])
-            
-    res_diffs = {}
+    gmm = GaussianMixture(n_components=2, random_state=0).fit(np.concatenate((c_dict["withins"], c_dict["betweens"])))
 
-    sum_std = np.sqrt(np.square(c_dict["withins"][curv_name]["std"]) + np.square(c_dict["betweens"][curv_name]["std"]))   # Gesamt-Stdabw berechnen
-    res_diffs[curv_name] = np.abs((c_dict["withins"][curv_name]["mean"] - c_dict["betweens"][curv_name]["mean"]) / sum_std)     # Differenz der Mittelwerte bilden und normieren
-    
-    return res_diffs
+    # find the midpoint between the means of the two Gaussians
+    threshold = param * (gmm.means_[0] + gmm.means_[1])
+
+    return threshold

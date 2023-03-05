@@ -44,6 +44,7 @@ class CurvatureGraph(nx.Graph):
 
         self.cycles = {}
         self.curvature_gap = {}
+        self.threshold = {}
         for edge in self.edges:
             self.edges[edge]["weight"] = 1
         self.pos = None
@@ -379,6 +380,47 @@ class CurvatureGraph(nx.Graph):
                 print("Augmented Forman-Ricci curvature not found. Computing it now.")
                 self.compute_afrc()
                 self.plot_curvature_histogram(curvature, colors)
+
+
+    def find_threshold(self, curv_name, param = 0.5, cmp_key="block"):
+        """
+        Find the threshold for a given curvature distribution. 
+        Used in the community detection algorithms.
+
+        Parameters
+        ----------
+        curv_name : str
+            The curvature to use for the thresholding. Can be "frc", "orc" or "afrc".
+
+        param : float, optional
+            The parameter for the thresholding. The default is 0.5.
+
+        cmp_key : str, optional
+            The key to use for comparison. The default is "block".
+
+        Returns
+        -------
+        float
+            The threshold for the curvature.
+        """
+        try:
+            self.threshold[curv_name] = cg.find_threshold(self, curv_name, param, cmp_key)
+
+        except KeyError as error:
+            if error.args[0] == "frc":
+                print("Forman-Ricci curvature not found. Computing it now.")
+                self.compute_frc()
+                self.find_threshold(curv_name, param, cmp_key)
+
+            elif error.args[0] == "orc":
+                print("Ollivier-Ricci curvature not found. Computing it now.")
+                self.compute_orc()
+                self.find_threshold(curv_name, param, cmp_key)
+
+            elif error.args[0] == "afrc":
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
+                self.compute_afrc()
+                self.find_threshold(curv_name, param, cmp_key)
 
 
     def detect_communities(self, curvature, threshold = 0):
