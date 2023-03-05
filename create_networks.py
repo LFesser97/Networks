@@ -69,8 +69,12 @@ def determine_between_edges(node_affiliations, node_degrees, num_blocks, param):
             if i == j:
                 between_edges[(i, j)] = 0
             else:
-                between_edges[(i, j)] = np.random.randint(0, param * min(block_degrees[i], block_degrees[j]))
-                block_degrees[i] -= between_edges[(i, j)]
-                block_degrees[j] -= between_edges[(i, j)]
+                try:
+                    between_edges[(i, j)] = np.random.randint(0, param * min(block_degrees[i], block_degrees[j]))
+                    block_degrees[i] -= between_edges[(i, j)]
+                    block_degrees[j] -= between_edges[(i, j)]
+
+                except ValueError:
+                    between_edges[(i, j)] = 0
 
     return between_edges
