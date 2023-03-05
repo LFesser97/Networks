@@ -591,7 +591,7 @@ class CurvatureER(CurvatureGraph):
         Compute the curvature gap for the graph.
         """
         try:
-            self.curvature_gap[curv_name] = cg.er_compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
+            self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
 
         except KeyError:
             print("No Louvain communities detected. Computing them now.")
