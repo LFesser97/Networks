@@ -111,6 +111,20 @@ class CurvatureGraph(nx.Graph):
                           alpha)
 
 
+    def detect_louvain_communities(self):
+        """
+        Detect communities using the Louvain algorithm from networkx and store the 
+        detected communities in the attribute self.nodes[node]["louvain-community"].
+        """
+        # detect communities using the Louvain algorithm from networkx
+        communities = nx_comm.greedy_modularity_communities(self)
+
+        # store the detected communities in the attribute self.nodes[node]["louvain-community"]
+        for i, community in enumerate(communities):
+            for node in community:
+                self.nodes[node]["louvain-community"] = i
+
+
     def get_cycles(self):
         """
         Get the cycles of the graph.
