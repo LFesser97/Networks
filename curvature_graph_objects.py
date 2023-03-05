@@ -585,6 +585,18 @@ class CurvatureER(CurvatureGraph):
             print("No Louvain communities detected. Computing them now.")
             self.detect_louvain_communities()
             self.assign_edges()
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        try:
+            self.curvature_gap[curv_name] = cg.er_compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
+
+        except KeyError:
+            print("No Louvain communities detected. Computing them now.")
+            self.detect_louvain_communities()
+            self.compute_curvature_gap(curv_name)
     
 
 class CurvatureBG(CurvatureGraph):
