@@ -511,8 +511,8 @@ class CurvatureDC_SBM(CurvatureGraph):
             The number of blocks in the model.
 
         alpha : float
-            The parameter of the Zipf distribution from which the degrees are drawn.
-            Normally between 1 and 2.
+            The parameter of the Poisson distribution from which the degrees are drawn.
+            Must be non-negative.
 
         beta : float
             Parameter to regulate the number of edges between blocks, between 0 and 1.
@@ -525,8 +525,8 @@ class CurvatureDC_SBM(CurvatureGraph):
         # assign N nodes randomly to B blocks in a list
         b = list(np.random.randint(0, B, N))
 
-        # draw the degrees of the nodes from a Zipf distribution with parameter alpha
-        k = list(np.random.zipf(alpha, N))
+        # draw the degrees of the nodes from a Poisson distribution with parameter alpha
+        k = list(np.random.poisson(alpha, N))
 
         # get the number of edges between blocks
         E = cn.determine_between_edges(b, k, B, beta)
