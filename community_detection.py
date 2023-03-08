@@ -188,7 +188,10 @@ def select_an_edge(edge_list):
 
     """
     # randomly choose an edge from the list of edges
-    return random.choice(edge_list)
+    edge = random.choice(edge_list)
+    print(edge)
+    
+    return edge
 
 
 def set_node_labels(G, C, curvature):
