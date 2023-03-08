@@ -72,7 +72,7 @@ def detect_communities(G, curvature, threshold):
 
         # remove chosen edge
         removed_edges.append((u,v))
-        
+
         G_copy.remove_edge(u,v)
         affecteds = list(G_copy.edges([u,v]))
         threshold_edges = [(u,v)  for u,v,d in threshold_list]
@@ -103,7 +103,7 @@ def detect_communities(G, curvature, threshold):
 
     # Create list of tupels with node names and cluster labels, set node colors acc to cluster
     set_node_labels(G,C, curvature)
-    print(removed_edges)
+    print("removed edges: ", removed_edges)
 
 
 # helper functions
