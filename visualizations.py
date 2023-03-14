@@ -235,7 +235,8 @@ def get_bin_width (b_min, b_max, num_bin_lim):
 
 # changed the name of this
 # def show_histo(h_data, title_str, my_bin_num = 40):
-def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
+def plot_curvature_hist_colors(h_data, title_str = "No Title", 
+                               x_axis_str = "X-Axis", y_axis_str = "Y-Axis", my_bin_num = 40):
     """
     Show the histogram for the given data. 
 
@@ -246,6 +247,12 @@ def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
 
     title_str : str
         The title to use for the histogram.
+
+    x_axis_str : str
+        The label to use for the x-axis.
+
+    y_axis_str : str
+        The label to use for the y-axis.
 
     my_bin_num : int, optional
         The number of bins to use. The default is 40.
@@ -273,18 +280,21 @@ def plot_curvature_hist_colors(h_data, title_str = "No Title", my_bin_num = 40):
     ax.hist(h_data,  # used to be h_data[k]["curv"]
                     bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
                     edgecolor = "white", 
-                    histtype='bar', 
+                    histtype='stepfilled', 
                     stacked=True)
 
     #ax.set_title(title_str)
     ax.title.set_size(16)
     ax.tick_params(axis='both', labelsize=16)
     ax.grid(visible=True, axis="both")
-    fig.suptitle(title_str, size=16)
+    ax.set_xlabel(x_axis_str, fontsize=16)
+    ax.set_ylabel(y_axis_str, fontsize=16)
+    fig.suptitle(title_str, size=20)
     plt.show()  
 
 
-def show_histos (h_data, title_str, my_nrows = 2, my_ncols = 3, bin_num_lim = 40):
+def show_histos (h_data, title_str = "No Title", x_axis_str = "X-Axis", y_axis_str = "Y-Axis", 
+                 my_nrows = 2, my_ncols = 3, bin_num_lim = 40, fixed_x_axis=False):
     """
     Show several histograms in a grid.
 
@@ -295,6 +305,12 @@ def show_histos (h_data, title_str, my_nrows = 2, my_ncols = 3, bin_num_lim = 40
 
     title_str : str
         The title to use for the histogram.
+     
+    x_axis_str : str
+        The label to use for the x-axis.
+
+    y_axis_str : str
+        The label to use for the y-axis.
 
     my_nrows : int, optional
         The number of rows to use. The default is 2.
@@ -318,17 +334,23 @@ def show_histos (h_data, title_str, my_nrows = 2, my_ncols = 3, bin_num_lim = 40
         axes[r,c].hist(h_data[k]["curv"], 
                        bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width), 
                        edgecolor = "white", 
-                       histtype='bar', 
-                       stacked=True)
+                       histtype='stepfilled', 
+                       stacked=True,
+                       alpha = 0.5)
 
         axes[r,c].set_title(h_data[k]["title"])
         axes[r,c].title.set_size(16)
         axes[r,c].tick_params(axis='both', labelsize=16)
         axes[r,c].grid(visible=True, axis="both")
-    fig.suptitle(title_str, size=16)
+        axes[r,c].set_xlabel(x_axis_str, fontsize=16)
+        axes[r,c].set_ylabel(y_axis_str, fontsize=16)
+        if fixed_x_axis:
+            axes[r,c].set_xlim((-1, 1))
+    fig.suptitle(title_str, size=20)
     plt.show()    
+    
 
-def show_histos (G, bin_width = 1):
+def show_histos (G, x_axis_str = "X-Axis", y_axis_str = "Y-Axis", bin_width = 1):
     """
     Show the histograms for the given graph.
     
@@ -336,6 +358,12 @@ def show_histos (G, bin_width = 1):
     ----------
     G : networkx graph
         The graph to show the histograms for.
+        
+    x_axis_str : str
+        The label to use for the x-axis.
+
+    y_axis_str : str
+        The label to use for the y-axis.
 
     bin_width : int, optional
         The bin width to use. The default is 1.
@@ -350,16 +378,24 @@ def show_histos (G, bin_width = 1):
     max_bin = max(max(l_frc), max(l_afrc))
     print("min_bin: ", min_bin, " - max_bin: ", max_bin)
     fig, axes = plt.subplots(nrows=1, ncols=2, sharex = True, sharey = True, figsize=(14,7))
-    axes[0].hist(l_frc, bins = np.arange(min_bin, max_bin + bin_width, bin_width), edgecolor = "white")
+    axes[0].hist(l_frc, 
+                 bins = np.arange(min_bin, max_bin + bin_width, bin_width), 
+                 edgecolor = "white")
     axes[0].set_title("FR curvature")
     axes[0].title.set_size(20)
     axes[0].tick_params(axis='both', labelsize=16)
     axes[0].grid(visible=True, axis="both")
-    axes[1].hist(l_afrc, bins = np.arange(min_bin, max_bin + bin_width, bin_width), edgecolor = "white")
+    axes[0].set_xlabel(x_axis_str, fontsize=16)
+    axes[0].set_ylabel(y_axis_str, fontsize=16)
+    axes[1].hist(l_afrc, 
+                 bins = np.arange(min_bin, max_bin + bin_width, bin_width), 
+                 edgecolor = "white")
     axes[1].set_title("Augmented FR curvature")
     axes[1].title.set_size(20)
     axes[1].tick_params(axis='both', labelsize=16)
     axes[1].grid(visible=True, axis="both")
+    axes[1].set_xlabel(x_axis_str, fontsize=16)
+    axes[1].set_ylabel(y_axis_str, fontsize=16)
     plt.show()
 
 
@@ -385,7 +421,7 @@ def show_curv_min_max_values (h_data): # NEED TO SPECIFY WHAT THIS FUNCTION DOES
     print()
 
 
-def plot_curvature_hist(curv_list, title):
+def plot_curvature_hist(curv_list, title = "No Title", x_axis_str = "X-Axis", y_axis_str = "Y-Axis"):
     """
     Plot histogram of curvature values
 
@@ -393,6 +429,15 @@ def plot_curvature_hist(curv_list, title):
     ----------
     curv_list : list
         List of curvature values.
+        
+    title : str
+        The title to use for the histogram.
+
+    x_axis_str : str
+        The label to use for the x-axis.
+
+    y_axis_str : str
+        The label to use for the y-axis.
 
     Returns
     -------
@@ -401,8 +446,9 @@ def plot_curvature_hist(curv_list, title):
     """
     fig, ax = plt.subplots(figsize=(14,10))
     ax.hist(curv_list, bins=40, edgecolor="white")
-    ax.set_title(title)
-    ax.title.set_size(16)
+    ax.set_title(title, fontsize = 16)
+    ax.set_xlabel(x_axis_str, fontsize=20)
+    ax.set_ylabel(y_axis_str, fontsize=16)
     ax.tick_params(axis='both', labelsize=16)
     ax.grid(visible=True, axis="both")
     plt.show()
