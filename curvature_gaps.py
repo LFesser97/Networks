@@ -77,13 +77,29 @@ def find_threshold(G, curv_name, param, cmp_key):
         The parameter that determines the threshold. Default is 0.5.
 
     cmp_key : str
-        The key of the node attribute that contains the community assignment. Default is "block".
+        The key of the node attribute that contains the community assignment. 
+        Default is "block".
 
     Returns
     -------
     threshold : float
         The midpoint between the means of the two Gaussians
     """
+
+    # get the curvature values of all edges
+    curv_vals = np.array([G.edges[edge][curv_name] for edge in G.edges]).reshape(-1, 1)
+    
+    # fit a mixture of two Gaussians to the curvature values
+    # using GaussianMixture.fit() from sklearn.mixture
+    gmm = GaussianMixture(n_components=2, random_state=0).fit(curv_vals)
+
+    # find the midpoint between the means of the two Gaussians
+    threshold = param * (gmm.means_[0] + gmm.means_[1])
+
+    return threshold
+
+
+"""
 
     # get the curvature values of edges within and between communities
     # assume that each edge already has the attribute "group" for within/between communities
@@ -101,3 +117,5 @@ def find_threshold(G, curv_name, param, cmp_key):
     threshold = param * (gmm.means_[0] + gmm.means_[1])
 
     return threshold
+
+"""

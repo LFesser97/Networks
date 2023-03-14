@@ -193,23 +193,23 @@ def allocate_cycles_to_edges (G, ll, i):
 
 
 def get_orc_edge_curvatures (G):          
-     """
-     computes the Ollivier-Ricci curvature of all edges of a given graph G
+    """
+    computes the Ollivier-Ricci curvature of all edges of a given graph G
 
-     Parameters
-     ----------
-     G : NetworkX graph
-         An undirected graph.
+    Parameters
+    ----------
+    G : NetworkX graph
+        An undirected graph.
 
-     Returns
-     -------
-     None.
-     """
-     orc = OllivierRicci(G, alpha=0.5, verbose="ERROR")
-     orc.compute_ricci_curvature()
+    Returns
+    -------
+    None.
+    """
+    orc = OllivierRicci(G, alpha=0.5, verbose="ERROR")
+    orc.compute_ricci_curvature()
 
-     for (u,v) in list(orc.G.edges()):               
-         G.edges[u,v]["orc"] = orc.G.edges[u,v]["ricciCurvature"]
+    for (u,v) in list(orc.G.edges()):               
+        G.edges[u,v]["orc"] = orc.G.edges[u,v]["ricciCurvature"]
 
 
 # def get_edge_curvatures (G, t_coeff = 3, q_coeff = 2, p_coeff = 1):   
