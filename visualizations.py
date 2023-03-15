@@ -166,7 +166,6 @@ def plot_curvature_hist_colors(h_data, title_str,
                     bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width),
                     edgecolor = "white",
                     histtype='stepfilled',
-                    stacked=True,
                     alpha=0.5)
 
     #ax.set_title(title_str)
