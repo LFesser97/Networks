@@ -108,7 +108,7 @@ def set_edge_colors(G,a,thr=0):
         if (a < thr) and (d["afrc"] == a):
             d["color"] = "red"    
 
-def set_SBM_node_colors(Gr, cmp_key="block"):                         # Einfärben der Kanten innerhalb und außerhalb eines Blocks
+def set_SBM_node_colors(Gr, cmp_key="block"):                         
     """
     Set the node colors for the given graph.
 
@@ -128,7 +128,7 @@ def set_SBM_node_colors(Gr, cmp_key="block"):                         # Einfärb
         d["color"] = d[cmp_key] 
     return Gr
 
-def set_SBM_edge_colors(Gr, cmp_key="block"):                         # Einfärben der Kanten innerhalb und außerhalb eines Blocks
+def set_SBM_edge_colors(Gr, cmp_key="block"):                         
     """
     Set the edge colors for the given graph.
 

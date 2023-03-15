@@ -326,7 +326,12 @@ class CurvatureGraph(nx.Graph):
                 self.compute_correlation(curvature1, curvature2)
 
 
-    def plot_curvature_histogram(self, curvature, title = 'No title', colors = False):
+    def plot_curvature_histogram(self, 
+                                 curvature, 
+                                 title = 'No title', 
+                                 x_axis = 'x-axis', 
+                                 y_axis = 'y-axis', 
+                                 colors = False):
         """
         Plot a histogram of the values of a curvature.
 
@@ -354,7 +359,9 @@ class CurvatureGraph(nx.Graph):
                     vis.plot_curvature_hist_colors([
                         [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
                         [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]],
-                        title_str = title
+                        title_str = title,
+                        x_axis_str = x_axis,
+                        y_axis_str = y_axis
                     )
 
                 except KeyError:
