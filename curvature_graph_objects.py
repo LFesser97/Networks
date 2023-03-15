@@ -370,7 +370,10 @@ class CurvatureGraph(nx.Graph):
             else:
                 vis.plot_curvature_hist(
                     [self.edges[edge][curvature] for edge in self.edges], 
-                    title = title)
+                    title = title,
+                    x_axis = x_axis,
+                    y_axis = y_axis
+                    )
 
         except KeyError as error:
             if error.args[0] == "frc":
