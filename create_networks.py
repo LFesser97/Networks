@@ -22,7 +22,8 @@ import json
 
 # auxiliary function for creating a degree-corrected Stochastic Block Model
 
-def determine_between_edges(node_affiliations, node_degrees, num_blocks, param):
+def determine_between_edges(node_affiliations,
+                            node_degrees, num_blocks, param):
     """
     Determine the number of edges between communities in a degree-corrected
     Stochastic Block Model.
@@ -44,7 +45,8 @@ def determine_between_edges(node_affiliations, node_degrees, num_blocks, param):
     Returns
     -------
     between_edges : dict
-        A dictionary of the number of edges between the blocks. With sets as keys.
+        A dictionary of the number of edges between the blocks
+        with sets as keys.
     """
 
     # create a dictionary of the number of edges between communities
@@ -61,16 +63,17 @@ def determine_between_edges(node_affiliations, node_degrees, num_blocks, param):
     for i in range(len(node_affiliations)):
         block_degrees[node_affiliations[i]] += node_degrees[i]
 
-    # for each pair of blocks {i, j}, choose a random integer between 0 and the 
-    # minimum of block_degrees[i] and block_degrees[j] and update block_degrees[i]
-    # and block_degrees[j] accordingly
+    # for each pair of blocks {i, j}, choose a random integer between 0 and the
+    # minimum of block_degrees[i] and block_degrees[j] and update
+    # block_degrees[i] and block_degrees[j] accordingly
     for i in range(num_blocks):
         for j in range(i, num_blocks):
             if i == j:
                 between_edges[(i, j)] = 0
             else:
                 try:
-                    between_edges[(i, j)] = np.random.randint(0, param * min(block_degrees[i], block_degrees[j]))
+                    between_edges[(i, j)] = np.random.randint(
+                        0, param * min(block_degrees[i], block_degrees[j]))
                     block_degrees[i] -= between_edges[(i, j)]
                     block_degrees[j] -= between_edges[(i, j)]
 

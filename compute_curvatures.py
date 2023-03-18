@@ -20,12 +20,10 @@ import json
 
 from GraphRicciCurvature.OllivierRicci import OllivierRicci
 
-#from GraphRicciCurvature.FormanRicci import FormanRicci
-#from GraphRicciCurvature.OllivierRicci import OllivierRicci
 
-cyc_names = {3:"triangles", 4:"quadrangles", 5:"pentagons"}
+cyc_names = {3: "triangles", 4: "quadrangles", 5: "pentagons"}
 
-# REVISIT THIS
+
 def simple_cycles(G, limit):
     """
     Find simple cycles (elementary circuits) of a graph up to a given length.
@@ -74,10 +72,10 @@ def simple_cycles(G, limit):
         sccs.extend(list(nx.strongly_connected_components(H)))
 
 
-def fr_curvature (G, ni, nj):
-    '''
-    computes the Forman-Ricci curvature of a given edge 
-    
+def fr_curvature(G, ni, nj):
+    """
+    computes the Forman-Ricci curvature of a given edge
+
     Parameters
     ----------
     G : Graph
@@ -89,78 +87,103 @@ def fr_curvature (G, ni, nj):
     frc : int
         Forman Ricci curvature of the edge connecting nodes i and j
 
-    '''
+    """
     frc = 4 - G.degree(ni) - G.degree(nj)
-    return frc 
+    return frc
 
 
-def afrc_3_curvature (G, ni, nj, t_num, t_coeff = 3):
-    '''
-    computes the Augmented Forman-Ricci curvature of a given edge 
-    includes 3-cycles in calculation 
-    
+def afrc_3_curvature(G, ni, nj, t_num, t_coeff=3):
+    """
+    computes the Augmented Forman-Ricci curvature of a given edge
+    includes 3-cycles in calculation
+
     Parameters
     ----------
     G : Graph
-    ni : node i
-    nj : node j
-    m : number of triangles containing the edge between node i and j
+
+    ni : int
+        node i
+
+    nj : int
+        node j
+
+    m : int
+        number of triangles containing the edge between node i and j
 
     Returns
     -------
     afrc : int
-        Forman Ricci curvature of the edge connecting nodes i and j   
-    '''
+        Forman Ricci curvature of the edge connecting nodes i and j
+    """
     afrc = 4 - G.degree(ni) - G.degree(nj) + t_coeff * t_num
     return afrc
 
 
-def afrc_4_curvature (G, ni, nj, t_num, q_num, t_coeff = 3, q_coeff = 2):
-    '''
-    computes the Augmented Forman-Ricci curvature of a given edge, 
-    includes 3- and 4-cycles in calculation 
-    
+def afrc_4_curvature(G, ni, nj, t_num, q_num, t_coeff=3, q_coeff=2):
+    """
+    computes the Augmented Forman-Ricci curvature of a given edge,
+    includes 3- and 4-cycles in calculation
+
     Parameters
     ----------
     G : Graph
-    ni : node i
-    nj : node j
-    t : number of triangles containing the edge between node i and j
-    q : number of quadrangles containing the edge between node i and j
+
+    ni : int
+        node i
+
+    nj : int
+        node j
+
+    t : int
+        number of triangles containing the edge between node i and j
+
+    q : int
+        number of quadrangles containing the edge between node i and j
 
     Returns
     -------
     afrc4 : int
-        enhanced Forman Ricci curvature of the edge connecting nodes i and j   
-    '''
+        enhanced Forman Ricci curvature of the edge connecting nodes i and j
+    """
     afrc4 = 4 - G.degree(ni) - G.degree(nj) + t_coeff * t_num + q_coeff * q_num
     return afrc4
 
 
-def afrc_5_curvature (G, ni, nj, t_num, q_num, p_num, t_coeff = 3, q_coeff = 2, p_coeff = 1):
-    '''
-    computes the Augmented Forman-Ricci curvature of a given edge 
-    includes 3-, 4- and 5-cycles in calculation 
-    
+def afrc_5_curvature(G, ni, nj, t_num, q_num, p_num,
+                     t_coeff=3, q_coeff=2, p_coeff=1):
+    """
+    computes the Augmented Forman-Ricci curvature of a given edge
+    includes 3-, 4- and 5-cycles in calculation
+
     Parameters
     ----------
     G : Graph
-    ni : node i
-    nj : node j
-    t : number of triangles containing the edge between node i and j
-    q : number of quadrangles containing the edge between node i and j
-    p : number of pentagons containing the edge between node i and j
+
+    ni : int
+        node i
+
+    nj : int
+        node j
+
+    t : int
+        number of triangles containing the edge between node i and j
+
+    q : int
+        number of quadrangles containing the edge between node i and j
+
+    p : int
+        number of pentagons containing the edge between node i and j
 
     Returns
     -------
     afrc5 : int
         enhanced Forman Ricci curvature of the edge connecting nodes i and j   
-    '''
+    """
     afrc5 = 4 - G.degree(ni) - G.degree(nj) + t_coeff * t_num + q_coeff * q_num + p_coeff * p_num
     return afrc5
 
 
-def allocate_cycles_to_edges (G, ll, i):
+def allocate_cycles_to_edges(G, ll, i):
     """
     allocate the number of cycles of length i to the edges of the graph G
 
@@ -179,20 +202,19 @@ def allocate_cycles_to_edges (G, ll, i):
     -------
     None.
     """
-
-    for l in ll:     
-        for e1 in range(0, i):    
-            if e1 == i-1:             
+    for l in ll:
+        for e1 in range(0, i):
+            if e1 == i-1:
                 e2 = 0
             else:
                 e2 = e1 + 1
-            u = l[e1]         
-            v = l[e2]         
-             
-            G.edges[u,v][cyc_names[i]] += 1 
+            u = l[e1]
+            v = l[e2]
+
+            G.edges[u, v][cyc_names[i]] += 1
 
 
-def get_orc_edge_curvatures (G):          
+def get_orc_edge_curvatures(G):
     """
     computes the Ollivier-Ricci curvature of all edges of a given graph G
 
@@ -208,44 +230,11 @@ def get_orc_edge_curvatures (G):
     orc = OllivierRicci(G, alpha=0.5, verbose="ERROR")
     orc.compute_ricci_curvature()
 
-    for (u,v) in list(orc.G.edges()):               
-        G.edges[u,v]["orc"] = orc.G.edges[u,v]["ricciCurvature"]
+    for (u, v) in list(orc.G.edges()):
+        G.edges[u, v]["orc"] = orc.G.edges[u, v]["ricciCurvature"]
 
 
-# def get_edge_curvatures (G, t_coeff = 3, q_coeff = 2, p_coeff = 1):   
-#     """
-#     Calculates curvature values for each edge in the graph
-
-#     Parameters
-#     ----------
-#     G : graph
-#         A networkx graph
-
-#     t_coeff : int
-#         Coefficient for triangles, default = 3
-
-#     q_coeff : int
-#         Coefficient for quadrangles, default = 2
-
-#     p_coeff : int
-#         Coefficient for pentagons, default = 1
-
-#     Returns
-#     -------
-#     None.
-#     """
-#     for (u,v) in list(G.edges()):               
-#         tr = len(G.edges[u,v][cyc_names[3]]) / 2
-#         qu = len(G.edges[u,v][cyc_names[4]]) / 2
-#         pe = len(G.edges[u,v][cyc_names[5]]) / 2
-#         G.edges[u,v]["frc"] = fr_curvature(G, u, v)        
-#         G.edges[u,v]["afrc"] = afr_curvature(G, u, v, t_coeff, tr)
-#         G.edges[u,v]["afrc4"] = afr4_curvature(G, u, v, t_coeff, tr, q_coeff, qu)
-#         G.edges[u,v]["afrc5"] = afr5_curvature(G, u, v, t_coeff, tr, q_coeff, qu, p_coeff, pe)    
-
-
-""" CODE FROM SERGIO """
-
+"""     NEED TO REPLACE THIS WITH THE IMPROVED ALGORITHM    """
 def AugFormanSq(e,G):
     
     E=np.zeros([len(G), len(G)]) #Matrix of edge contributions

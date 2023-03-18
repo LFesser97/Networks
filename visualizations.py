@@ -18,7 +18,16 @@ import networkx.algorithms.community as nx_comm
 import os
 import json
 
-def plot_my_graph(G, pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha):
+
+def plot_my_graph(G,
+                  pos,
+                  node_col,
+                  edge_lst,
+                  edge_col,
+                  edge_lab,
+                  bbox,
+                  color_map,
+                  alpha):
     """
     Plot a graph with the given node and edge colors.
 
@@ -56,31 +65,35 @@ def plot_my_graph(G, pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_ma
     None.
     """
     node_options = {
-        "font_size": 12, 
+        "font_size": 12,
         "font_color": "black",
-        "node_size": 300, 
+        "node_size": 300,
         "cmap": plt.get_cmap(color_map),
         "alpha": alpha,
         "edgecolors": "black",
-        "linewidths": 0.5,   
+        "linewidths": 0.5,
         "with_labels": True,
         "edgelist": None
         }
     edge_options = {
         "width": 0.5
         }
-    fig = plt.figure(figsize=(15,15))
+    fig = plt.figure(figsize=(15, 15))
     # nx.draw_networkx (G, pos, **options)
-    nx.draw_networkx (G, pos, node_color = node_col, edge_color = edge_col, **node_options)
-    nx.draw_networkx_edges (G, pos, edge_lst, edge_color = edge_col, **edge_options)
-    nx.draw_networkx_edge_labels(G, pos, label_pos = 0.5, 
-                                 edge_labels = edge_lab, rotate=False,
-                                 bbox = bbox)
+    nx.draw_networkx(G, pos, node_color=node_col,
+                     edge_color=edge_col, **node_options)
+
+    nx.draw_networkx_edges(G, pos, edge_lst,
+                           edge_color=edge_col, **edge_options)
+
+    nx.draw_networkx_edge_labels(G, pos, label_pos=0.5,
+                                 edge_labels=edge_lab,
+                                 rotate=False, bbox=bbox)
     plt.gca().margins(0.20)
     plt.show()
 
 
-def get_bin_width (b_min, b_max, num_bin_lim):
+def get_bin_width(b_min, b_max, num_bin_lim):
     """
     Get the bin width for the given bin limits.
 
@@ -124,10 +137,10 @@ def get_bin_width (b_min, b_max, num_bin_lim):
     return b_lo_lim, b_hi_lim, b_width
 
 
-def plot_curvature_hist_colors(h_data, title_str, 
-                               x_axis_str, y_axis_str, my_bin_num = 40):
+def plot_curvature_hist_colors(h_data, title_str,
+                               x_axis_str, y_axis_str, my_bin_num=40):
     """
-    Show the histogram for the given data. 
+    Show the histogram for the given data.
 
     Parameters
     ----------
@@ -150,7 +163,7 @@ def plot_curvature_hist_colors(h_data, title_str,
     -------
     None.
     """
-    fig, ax = plt.subplots(figsize=(16,10))
+    fig, ax = plt.subplots(figsize=(16, 10))
 
     # get the smallest and largest values in the data
     min_0 = min(h_data[0])
@@ -161,14 +174,15 @@ def plot_curvature_hist_colors(h_data, title_str,
     max_1 = max(h_data[1])
     max_val = max(max_0, max_1)
 
-    bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(min_val, max_val, my_bin_num)
-    ax.hist(h_data,  # used to be h_data[k]["curv"]
-                    bins = np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width),
-                    edgecolor = "white",
-                    histtype='stepfilled',
-                    alpha=0.5)
+    bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(
+        min_val, max_val, my_bin_num)
+    ax.hist(h_data,
+            bins=np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width),
+            edgecolor="white",
+            histtype='stepfilled',
+            alpha=0.7)
 
-    #ax.set_title(title_str)
+    # ax.set_title(title_str)
     ax.title.set_size(16)
     ax.tick_params(axis='both', labelsize=16)
     ax.grid(visible=True, axis="both")
@@ -176,6 +190,7 @@ def plot_curvature_hist_colors(h_data, title_str,
     ax.set_ylabel(y_axis_str, fontsize=16)
     fig.suptitle(title_str, size=20)
     plt.show()
+
 
 def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     """
@@ -185,7 +200,7 @@ def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     ----------
     curv_list : list
         List of curvature values.
-        
+
     title : str
         The title to use for the histogram.
 
@@ -200,9 +215,9 @@ def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     None.
         Plots the histogram.
     """
-    fig, ax = plt.subplots(figsize=(14,10))
+    fig, ax = plt.subplots(figsize=(14, 10))
     ax.hist(curv_list, bins=40, edgecolor="white")
-    ax.set_title(title, fontsize = 16)
+    ax.set_title(title, fontsize=16)
     ax.set_xlabel(x_axis_str, fontsize=20)
     ax.set_ylabel(y_axis_str, fontsize=16)
     ax.tick_params(axis='both', labelsize=16)

@@ -360,3 +360,57 @@ def hbg_compute_curvature_gap(Gr, curv_name, cmp_key="prob"):
     res_diffs[curv_name] = np.abs((c_dict["withins"][curv_name]["mean"] - c_dict["betweens"][curv_name]["mean"]) / sum_std)     # Differenz der Mittelwerte bilden und normieren
     
     return res_diffs
+
+
+
+
+# Non-sequential community detection
+
+def detect_communities_nonsequential(G, t_coeff=3, q_coeff=2):
+    """
+    Detect communities in a graph using non-sequential community detection,
+    using the AFRC4 with expected weights. Only correct for an SBM.
+
+    Parameters
+    ----------
+    G : graph
+        A networkx graph
+
+    t_coeff : int
+        Coefficient for triangles, default = 3
+
+    q_coeff : int
+        Coefficient for quadrangles, default = 2
+
+    Returns
+    -------
+    G : graph
+        A networkx graph with node labels
+    """    
+
+    # get start values for curvature
+    # get_edge_curvatures(G, t_coeff, q_coeff)
+    # get min,max,values for afrc4 curvature
+    # afrc_min, afrc_max = get_min_max_afrc_values(G, "afrc4")
+    # show histogram of curvature values
+    # show_curv_data (G, title_str = "", cmp_key = "block")
+
+    afrc_threshold = int(input(
+        "Enter threshold value for AFRC4 to remove edges with a higher value: "))
+    
+    # collect edges with maximal AFRC4
+    afrc_above_list = [(u,v,d)  for u,v,d in G.edges.data()  if (d["afrc4"] > afrc_threshold)]
+        
+    # for all items in afrc_above_list
+    for i,a in enumerate(afrc_above_list):
+        # select edge from item
+        (u,v) = a[:2]
+        # remove edge from graph
+        G.remove_edge(u,v)
+        # print(i, " removed: ", (u,v))
+        
+    # determine connected components of graph of edges with positive ARFC
+    C = [c for c in sorted(nx.connected_components(G), key=len, reverse=True)]
+    # set node colors acc to cluster
+    G = set_node_labels(G,C)
+    return G

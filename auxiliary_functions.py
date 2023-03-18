@@ -37,13 +37,14 @@ def save_data_to_json_file(d, filename):
     -------
     None.
     """
-    json_string = json.dumps(d, indent = 4)
+    json_string = json.dumps(d, indent=4)
     json_file = open(filename, "w")
     json_file.write(json_string)
-    json_file.close() 
+    json_file.close()
     return None
 
-def read_data_from_json_file (fn):
+
+def read_data_from_json_file(fn):
     """
     Read data from json file. Used for reading positions of network nodes.
 
@@ -62,6 +63,7 @@ def read_data_from_json_file (fn):
     f.close()
     return d
 
+
 def pos_array_as_list(p):
     """
     Convert pos dict to list.
@@ -76,8 +78,9 @@ def pos_array_as_list(p):
     d : dict
         Dictionary of positions as lists.
     """
-    d = {k:list(a)  for k,a in iter(p.items())}
+    d = {k: list(a) for k, a in iter(p.items())}
     return d
+
 
 def pos_list_as_array(p):
     """
@@ -93,11 +96,11 @@ def pos_list_as_array(p):
     d : dict
         Dictionary of positions as arrays.
     """
-    d = {k:np.array(a)  for k,a in iter(p.items())}
+    d = {k: np.array(a) for k, a in iter(p.items())}
     return d
 
 
-def build_size_list (k, l):
+def build_size_list(k, l):
     """
     Build list of number of nodes per community.
 
@@ -105,7 +108,7 @@ def build_size_list (k, l):
     ----------
     k : int
         Number of nodes.
-    
+
     l : int
         Number of community.
 
@@ -114,10 +117,11 @@ def build_size_list (k, l):
     ll : list
         List of number of nodes per community.
     """
-    ll = [k  for i in range(l)]
+    ll = [k for i in range(l)]
     return ll
 
-def build_prob_list (l, p_in, p_out):
+
+def build_prob_list(l, p_in, p_out):
     """
     Build list of probabilities for SBM.
 
@@ -139,12 +143,13 @@ def build_prob_list (l, p_in, p_out):
         p_in on the main diagonal, p_out elsewhere.
     """
     ll = []
-    for i in range(l):    
-        temp_l = [p_out  for j in range(0,i)] + [p_in] + [p_out  for j in range(i+2,l+1)]
+    for i in range(l):
+        temp_l = [p_out for j in range(0, i)] + [p_in] + [p_out for j in range(i+2, l+1)]
         ll.append(temp_l)
     return ll
 
-def get_pos_layout (H, fn = ""):
+
+def get_pos_layout(H, fn=""):
     """
     Get positions of nodes for network layout.
     If fn is empty, create new Kamada-Kawai layout.
@@ -169,10 +174,11 @@ def get_pos_layout (H, fn = ""):
         cwd = os.getcwd()
         full_fn = os.path.join(cwd, fn)
         pos = pos_list_as_array(read_data_from_json_file(full_fn))
-        pos = {int(k):v  for (k,v) in iter(pos.items())}
+        pos = {int(k): v for (k, v) in iter(pos.items())}
     return pos
 
-def save_pos_layout(pos, fn = ""):
+
+def save_pos_layout(pos, fn=""):
     """
     Save positions of nodes for network layout.
     If fn is empty, do nothing.
@@ -195,7 +201,7 @@ def save_pos_layout(pos, fn = ""):
         save_data_to_json_file(pos_array_as_list(pos), full_fn)
 
 
-def save_pos_sbm(p,k,n):
+def save_pos_sbm(p, k, n):
     """
     Save positions of nodes for network layout.
     Only used for SBM.
@@ -216,12 +222,12 @@ def save_pos_sbm(p,k,n):
     None.
     """
     cwd = os.getcwd()
-    fn = "pos_SBM_graph_" + str(k) + "_nodes_in_" +  str(n) + "_communities.json"
+    fn = "pos_SBM_graph_" + str(k) + "_nodes_in_" + str(n) + "_communities.json"
     full_fn = os.path.join(cwd, fn)
     save_data_to_json_file(pos_array_as_list(p), full_fn)
-    
 
-def read_pos_sbm(k,n):
+
+def read_pos_sbm(k, n):
     """
     Read positions of nodes for network layout.
     Only used for SBM.
@@ -240,15 +246,15 @@ def read_pos_sbm(k,n):
         Dictionary of positions of nodes.
     """
     cwd = os.getcwd()
-    fn = "pos_SBM_graph_" + str(k) + "_nodes_in_" +  str(n) + "_communities.json"
+    fn = "pos_SBM_graph_" + str(k) + "_nodes_in_" + str(n) + "_communities.json"
     full_fn = os.path.join(cwd, fn)
     p = pos_list_as_array(read_data_from_json_file(full_fn))
-    p = {int(k):v  for (k,v) in iter(p.items())}
+    p = {int(k): v for (k, v) in iter(p.items())}
     return p
 
 
-def get_bipartite_graph (n=40, m=40, p_high=0.7, p_low=0.2):
-    '''
+def get_bipartite_graph(n=40, m=40, p_high=0.7, p_low=0.2):
+    """
     Builds a bipartite graph with groups A (with subgroups A1 and A2) and B (with subgroups B1 and B2), 
     adds edges between subgroups A1-B1 and A2-B2 with high probability and 
     edges between subgroups A1-B2 and A2-B1 with low probability
@@ -267,38 +273,37 @@ def get_bipartite_graph (n=40, m=40, p_high=0.7, p_low=0.2):
     Returns
     -------
     B : graph (bipartite)
+    """
 
-    '''
-    
     # assert n,m are even
     n = (n // 2) * 2
     m = (m // 2) * 2
-    
+
     # create empty graph
     B = nx.Graph()
 
     # add nodes subgroupwise
     # definition of subgroups in tuple list
     nodes_struct = [(n//2, 0, "A1"), (n//2, 0, "A2"), (m//2, 1, "B1"), (m//2, 1, "B2")] 
-    a,b = 0,0
+    a, b = 0, 0
     for nd in nodes_struct:
         b += nd[0]
-        B.add_nodes_from(list(range(a,b)), bipartite = nd[1], group = nd[2])
+        B.add_nodes_from(list(range(a, b)), bipartite=nd[1], group=nd[2])
         a += nd[0]
-        
+
     # add edges if binom. distrib. yields 1
-    edges_struct = [("A1","B1",p_high), ("A1","B2",p_low), ("A2","B1",p_low), ("A2","B2",p_high)]
+    edges_struct = [("A1", "B1", p_high), ("A1", "B2", p_low), ("A2", "B1", p_low), ("A2", "B2", p_high)]
     for ed in edges_struct:
         edge_tupels = []
-        gr0 = [n  for n,d in B.nodes.data()  if d["group"] == ed[0]]
-        gr1 = [n  for n,d in B.nodes.data()  if d["group"] == ed[1]]
-        binom_dist = np.random.binomial(1, ed[2], (len(gr0),len(gr1)))
-        for i,n0 in enumerate(gr0):
-            for j,n1 in enumerate(gr1):
-                if binom_dist[i,j] == 1:
+        gr0 = [n for n, d in B.nodes.data() if d["group"] == ed[0]]
+        gr1 = [n for n, d in B.nodes.data() if d["group"] == ed[1]]
+        binom_dist = np.random.binomial(1, ed[2], (len(gr0), len(gr1)))
+        for i, n0 in enumerate(gr0):
+            for j, n1 in enumerate(gr1):
+                if binom_dist[i, j] == 1:
                     edge_tupels.append((n0, n1))
-        B.add_edges_from(edge_tupels, prob = 1 if ed[2] == p_high else 0)
-    
+        B.add_edges_from(edge_tupels, prob=1 if ed[2] == p_high else 0)
+
     return B
 
 
@@ -361,9 +366,6 @@ def get_edges_between_blocks(list_1, list_2, e):
 
     return edges, new_list_1, new_list_2
 
-
-# function to check whether a given graph object has a community structure,
-# if yes, adds "group" attribute (within or between) to each edge
 
 def assign_edges(G, compare_key):
     """

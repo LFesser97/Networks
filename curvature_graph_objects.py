@@ -34,9 +34,9 @@ import create_networks as cn
 
 class CurvatureGraph(nx.Graph):
     """
-    An abstract class that inherits from the networkx Graph class and adds additional
-    attributes and methods related to graph curvature. Used to create subclasses for
-    artificial and real graphs.
+    An abstract class that inherits from the networkx Graph class
+    and adds additional attributes and methods related to graph curvature.
+    Used to create subclasses for artificial and real graphs.
     """
 
     def __init__(self, *args, **kwargs):
@@ -67,7 +67,7 @@ class CurvatureGraph(nx.Graph):
         dict_pos = af.read_data_from_json_file(filename)
         dict_pos_array = af.pos_list_as_array(dict_pos)
 
-        self.pos = {int(k):v  for (k,v) in iter(dict_pos_array.items())}
+        self.pos = {int(k): v  for (k, v) in iter(dict_pos_array.items())}
 
 
     def save_pos_to_json(self, filename):
@@ -86,41 +86,36 @@ class CurvatureGraph(nx.Graph):
         cwd = os.getcwd()
         full_filename = os.path.join(cwd, "pos_karate_club_graph.json")
 
-        af.save_data_to_json_file(af.pos_array_as_list(self.pos), full_filename)
+        af.save_data_to_json_file(
+            af.pos_array_as_list(self.pos), full_filename)
 
 
-    def plot_curvature_graph(self,
-                            pos = None, 
-                            node_col = "white", 
-                            edge_lst = [], 
-                            edge_col = "lightgrey", 
-                            edge_lab = {},
-                            bbox = None,
-                            color_map = "Set3",
-                            alpha = 1.0):
+    def plot_curvature_graph(self, pos=None,
+                            node_col="white", edge_lst=[],
+                            edge_col="lightgrey", edge_lab={},
+                            bbox=None, color_map="Set3",
+                            alpha=1.0):
         """
         Plot the curvature graph.
         """
-        vis.plot_my_graph(self,
-                          pos,  
-                          node_col, 
-                          edge_lst, 
-                          edge_col, 
-                          edge_lab, 
-                          bbox, 
-                          color_map, 
+        vis.plot_my_graph(self, pos,
+                          node_col, edge_lst,
+                          edge_col, edge_lab,
+                          bbox, color_map,
                           alpha)
 
 
     def detect_louvain_communities(self):
         """
-        Detect communities using the Louvain algorithm from networkx and store the 
-        detected communities in the attribute self.nodes[node]["louvain-community"].
+        Detect communities using the Louvain algorithm
+        from networkx and store the detected communities
+        in the attribute self.nodes[node]["louvain-community"].
         """
         # detect communities using the Louvain algorithm from networkx
         communities = nx_comm.greedy_modularity_communities(self)
 
-        # store the detected communities in the attribute self.nodes[node]["louvain-community"]
+        # store the detected communities in the attribute
+        # self.nodes[node]["louvain-community"]
         for i, community in enumerate(communities):
             for node in community:
                 self.nodes[node]["louvain_community"] = i
@@ -134,12 +129,15 @@ class CurvatureGraph(nx.Graph):
         for cycle in cc.simple_cycles(self.to_directed(), 6):
             all_cycles.append(cycle)
 
-        self.cycles["triangles"] = [cycle for cycle in all_cycles if len(cycle) == 3]
-        self.cycles["quadrangles"] = [cycle for cycle in all_cycles if len(cycle) == 4]
-        self.cycles["pentagons"] = [cycle for cycle in all_cycles if len(cycle) == 5]
+        self.cycles["triangles"] = [cycle for cycle in all_cycles
+                                    if len(cycle) == 3]
+        self.cycles["quadrangles"] = [cycle for cycle in all_cycles
+                                      if len(cycle) == 4]
+        self.cycles["pentagons"] = [cycle for cycle in all_cycles
+                                    if len(cycle) == 5]
 
 
-    def compute_frc(self, affected_edges = None):
+    def compute_frc(self, affected_edges=None):
         """
         Compute the Forman-Ricci curvature of the graph.
         """
@@ -151,7 +149,7 @@ class CurvatureGraph(nx.Graph):
             self.edges[edge]['frc'] = cc.fr_curvature(self, u, v)
 
 
-    def compute_orc(self, affected_edges = None):
+    def compute_orc(self, affected_edges=None):
         """
         Compute the Ollivier-Ricci curvature of the graph.
         """
@@ -159,14 +157,14 @@ class CurvatureGraph(nx.Graph):
         G = nx.Graph()
         G.add_nodes_from(self.nodes)
         G.add_edges_from(self.edges)
-        
+
         # compute Ollivier-Ricci curvature
         cc.get_orc_edge_curvatures(G)
         for edge in self.edges:
             self.edges[edge]["orc"] = G.edges[edge]["orc"]
 
 
-    def compute_afrc(self, affected_edges = None):
+    def compute_afrc(self, affected_edges=None):
         """
         Compute the correct augmented Forman-Ricci curvature of the graph.
         """
@@ -177,7 +175,7 @@ class CurvatureGraph(nx.Graph):
             self.edges[edge]['afrc'] = cc.AugFormanSq(edge, self)
 
 
-    def compute_afrc_3(self, affected_edges = None):
+    def compute_afrc_3(self, affected_edges=None):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
@@ -190,8 +188,7 @@ class CurvatureGraph(nx.Graph):
 
                 # compute curvature
                 self.edges[edge]['afrc_3'] = cc.afrc_3_curvature(
-                    self, u, v, 
-                    t_num = self.edges[edge]["triangles"]
+                    self, u, v, t_num=self.edges[edge]["triangles"]
                     )
 
         except KeyError:
@@ -200,7 +197,7 @@ class CurvatureGraph(nx.Graph):
             self.compute_afrc_3()
 
 
-    def compute_afrc_4(self, affected_edges = None):
+    def compute_afrc_4(self, affected_edges=None):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
@@ -213,9 +210,8 @@ class CurvatureGraph(nx.Graph):
 
                 # compute curvature
                 self.edges[edge]['afrc_4'] = cc.afrc_4_curvature(
-                    self, u, v, 
-                    t_num = self.edges[edge]["triangles"], 
-                    q_num = self.edges[edge]["quadrangles"]
+                    self, u, v, t_num=self.edges[edge]["triangles"],
+                    q_num=self.edges[edge]["quadrangles"]
                     )
 
         except KeyError:
@@ -225,7 +221,7 @@ class CurvatureGraph(nx.Graph):
             self.compute_afrc_4()
 
 
-    def compute_afrc_5(self, affected_edges = None):
+    def compute_afrc_5(self, affected_edges=None):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
         """
@@ -238,10 +234,9 @@ class CurvatureGraph(nx.Graph):
 
                 # compute curvature
                 self.edges[edge]['afrc_5'] = cc.afrc_5_curvature(
-                    self, u, v, 
-                    t_num = self.edges[edge]["triangles"], 
-                    q_num = self.edges[edge]["quadrangles"], 
-                    p_num = self.edges[edge]["pentagons"]
+                    self, u, v, t_num=self.edges[edge]["triangles"],
+                    q_num=self.edges[edge]["quadrangles"],
+                    p_num=self.edges[edge]["pentagons"]
                     )
 
         except KeyError:
@@ -252,20 +247,22 @@ class CurvatureGraph(nx.Graph):
             self.compute_afrc_5()
 
 
-    def count_triangles(self): # reimplement this using allocate_cycles_to_edges
+    def count_triangles(self):
         """
         Count the number of triangles for each edge in the graph.
         """
         try:
             for edge in list(self.edges()):
                 u, v = edge
-                self.edges[edge]["triangles"] = len([cycle for cycle in self.cycles["triangles"] if u in cycle and v in cycle])/2
+                self.edges[edge]["triangles"] = len([cycle for cycle
+                                                     in self.cycles["triangles"]
+                                                     if u in cycle and v in cycle])/2
 
         except KeyError:
             print("Need to compute the cycles first.")
             self.get_cycles()
             self.count_triangles()
-            
+
 
     def count_quadrangles(self):
         """
@@ -274,7 +271,9 @@ class CurvatureGraph(nx.Graph):
         try:
             for edge in list(self.edges()):
                 u, v = edge
-                self.edges[edge]["quadrangles"] = len([cycle for cycle in self.cycles["quadrangles"] if u in cycle and v in cycle])/2
+                self.edges[edge]["quadrangles"] = len([cycle for cycle
+                                                       in self.cycles["quadrangles"]
+                                                       if u in cycle and v in cycle])/2
 
         except KeyError:
             print("Need to compute the cycles first.")
@@ -289,8 +288,10 @@ class CurvatureGraph(nx.Graph):
         try:
             for edge in list(self.edges()):
                 u, v = edge
-                self.edges[edge]["pentagons"] = len([cycle for cycle in self.cycles["pentagons"] if u in cycle and v in cycle])/2
-        
+                self.edges[edge]["pentagons"] = len([cycle for cycle
+                                                     in self.cycles["pentagons"]
+                                                     if u in cycle and v in cycle])/2
+
         except KeyError:
             print("Need to compute the cycles first.")
             self.get_cycles()
@@ -303,7 +304,7 @@ class CurvatureGraph(nx.Graph):
         """
         try:
             corr_coeff = np.corrcoef(
-                [self.edges[edge][curvature1] for edge in self.edges], 
+                [self.edges[edge][curvature1] for edge in self.edges],
                 [self.edges[edge][curvature2] for edge in self.edges]
                 )[0, 1]
 
@@ -326,12 +327,9 @@ class CurvatureGraph(nx.Graph):
                 self.compute_correlation(curvature1, curvature2)
 
 
-    def plot_curvature_histogram(self, 
-                                 curvature, 
-                                 title = 'No title', 
-                                 x_axis = 'x-axis', 
-                                 y_axis = 'y-axis', 
-                                 colors = False):
+    def plot_curvature_histogram(self, curvature,
+                                 title='No title', x_axis='x-axis',
+                                 y_axis='y-axis', colors=False):
         """
         Plot a histogram of the values of a curvature.
 
@@ -357,11 +355,13 @@ class CurvatureGraph(nx.Graph):
             if colors:
                 try:
                     vis.plot_curvature_hist_colors([
-                        [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "within"],
-                        [self.edges[edge][curvature] for edge in self.edges if self.edges[edge]["group"] == "between"]],
-                        title_str = title,
-                        x_axis_str = x_axis,
-                        y_axis_str = y_axis
+                        [self.edges[edge][curvature]
+                         for edge in self.edges if self.edges[edge]["group"] == "within"],
+                        [self.edges[edge][curvature]
+                         for edge in self.edges if self.edges[edge]["group"] == "between"]],
+                        title_str=title,
+                        x_axis_str=x_axis,
+                        y_axis_str=y_axis
                     )
 
                 except KeyError:
@@ -369,10 +369,10 @@ class CurvatureGraph(nx.Graph):
 
             else:
                 vis.plot_curvature_hist(
-                    [self.edges[edge][curvature] for edge in self.edges], 
-                    title = title,
-                    x_axis = x_axis,
-                    y_axis = y_axis
+                    [self.edges[edge][curvature] for edge in self.edges],
+                    title=title,
+                    x_axis=x_axis,
+                    y_axis=y_axis
                     )
 
         except KeyError as error:
@@ -392,7 +392,7 @@ class CurvatureGraph(nx.Graph):
                 self.plot_curvature_histogram(curvature, colors)
 
 
-    def find_threshold(self, curv_name, param = 0.5, cmp_key="block"):
+    def find_threshold(self, curv_name, param=0.5, cmp_key="block"):
         """
         Find the threshold for a given curvature distribution. 
         Used in the community detection algorithms.
@@ -433,7 +433,7 @@ class CurvatureGraph(nx.Graph):
                 self.find_threshold(curv_name, param, cmp_key)
 
 
-    def detect_communities(self, curvature, threshold = 0):
+    def detect_communities(self, curvature, threshold=0):
         """
         Detect communities using a curvature.
 
@@ -482,11 +482,13 @@ class CurvatureSBM(CurvatureGraph):
 
         super().__init__(nx.stochastic_block_model(sizes, probs, seed=0))
 
+
     def compute_curvature_gap(self, curv_name):
         """
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name)
+
 
     def assign_edges(self):
         """
@@ -494,14 +496,20 @@ class CurvatureSBM(CurvatureGraph):
         """
         self = af.assign_edges(self, "block")
 
-    def plot_curvature_graph(self, pos=None, node_col="white", edge_lst=[], edge_col="lightgrey", edge_lab={}, bbox=None, color_map="Set3", alpha=1):
+
+    def plot_curvature_graph(self, pos=None, node_col="white",
+                             edge_lst=[], edge_col="lightgrey",
+                             edge_lab={}, bbox=None, color_map="Set3", alpha=1):
         """
         Plot the graph with the nodes colored by their block affiliation.
         """
         if node_col == "white":
             node_col = [self.nodes[node]["block"] for node in self.nodes]
 
-        super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
+        super().plot_curvature_graph(pos, node_col,
+                                     edge_lst, edge_col,
+                                     edge_lab, bbox,
+                                     color_map, alpha)
 
 
 class CurvatureDC_SBM(CurvatureGraph):
@@ -577,7 +585,7 @@ class CurvatureDC_SBM(CurvatureGraph):
                 block_dict[block_2][1] = new_list_2
 
         # create the graph
-        G = nx.from_numpy_array(A, parallel_edges = True, create_using = nx.MultiGraph())
+        G = nx.from_numpy_array(A, parallel_edges=True, create_using=nx.MultiGraph())
 
         # for each degree sequence in the dictionary, create a graph according to the configuration model
         for block in range(B):
@@ -602,14 +610,19 @@ class CurvatureDC_SBM(CurvatureGraph):
             self.nodes[node]["block"] = b[node]
 
 
-    def plot_curvature_graph(self, pos=None, node_col="white", edge_lst=[], edge_col="lightgrey", edge_lab={}, bbox=None, color_map="Set3", alpha=1):
+    def plot_curvature_graph(self, pos=None,
+                             node_col="white", edge_lst=[],
+                             edge_col="lightgrey", edge_lab={},
+                             bbox=None, color_map="Set3", alpha=1):
         """
         Plot the graph with the nodes colored by their block affiliation.
         """
         if node_col == "white":
             node_col = [self.nodes[node]["block"] for node in self.nodes]
 
-        super().plot_curvature_graph(pos, node_col, edge_lst, edge_col, edge_lab, bbox, color_map, alpha)
+        super().plot_curvature_graph(pos, node_col,
+                                     edge_lst, edge_col,
+                                     edge_lab, bbox, color_map, alpha)
 
 
     def compute_curvature_gap(self, curv_name, cmp_key = "community"):
@@ -633,6 +646,7 @@ class CurvatureER(CurvatureGraph):
     def __init__(self, n, p):
         super().__init__(nx.erdos_renyi_graph(n, p))
 
+
     def assign_edges(self):
         """
         Assign edges to be between or within communities.
@@ -645,6 +659,7 @@ class CurvatureER(CurvatureGraph):
             self.detect_louvain_communities()
             self.assign_edges()
 
+
     def compute_curvature_gap(self, curv_name):
         """
         Compute the curvature gap for the graph.
@@ -656,7 +671,7 @@ class CurvatureER(CurvatureGraph):
             print("No Louvain communities detected. Computing them now.")
             self.detect_louvain_communities()
             self.compute_curvature_gap(curv_name)
-    
+
 
 class CurvatureBG(CurvatureGraph):
     """
@@ -673,17 +688,20 @@ class CurvatureHBG(CurvatureGraph):
     def __init__(self, n, m, p, q):
         super().__init__(af.get_bipartite_graph(n, m, p, q))
 
+
     def compute_curvature_gap(self, curv_name):
         """
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.hbg_compute_curvature_gap(self, curv_name)
 
+
     def assign_edges(self):
         """
         Assign edges to be between or within communities.
         """
         pass # to be implemented
+
 
     def plot_curvature_graph(self, ):
         """
@@ -694,15 +712,14 @@ class CurvatureHBG(CurvatureGraph):
 
         pos = nx.bipartite_layout(self, top_nodes)
 
-        vis.plot_my_graph(self, 
-                            pos,
-                            node_col = [["A1","A2","B1","B2"].index(d["group"])  for n,d in self.nodes.data()],
-                            edge_lst=[],
-                            edge_col = [["pink","lightgrey"][d["prob"]]  for u,v,d in self.edges.data()],
-                            edge_lab={}, 
-                            bbox=None,
-                            color_map = "tab20", 
-                            alpha = 0.7)
+        vis.plot_my_graph(self, pos,
+                          node_col=[["A1", "A2", "B1", "B2"].index(d["group"])
+                                    for n, d in self.nodes.data()],
+                          edge_lst=[],
+                          edge_col=[["pink", "lightgrey"][d["prob"]]
+                                    for u, v, d in self.edges.data()],
+                          edge_lab={}, bbox=None,
+                          color_map="tab20", alpha=0.7)
 
 
 # define subclasses for real graphs
@@ -714,11 +731,13 @@ class CurvatureKarate(CurvatureGraph):
     def __init__(self):
         super().__init__(nx.karate_club_graph())
 
+
     def compute_curvature_gap(self, curv_name):
         """
         Compute the curvature gap for the graph.
         """
-        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "club")
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key="club")
+
 
     def assign_edges(self):
         """
@@ -738,11 +757,13 @@ class CurvatureAMF(CurvatureGraph):
         mapping = dict(zip(self, range(len(self.nodes))))
         self = nx.relabel_nodes(self, mapping, copy=False)
 
+
     def compute_curvature_gap(self, curv_name):
         """
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "value")
+
 
     def assign_edges(self):
         """
@@ -768,7 +789,7 @@ class CurvatureUSPowerGrid(CurvatureGraph):
     A subclass of CurvatureGraph specifically for the US power grid graph.
     """
     def __init__(self):
-        super().__init__(nx.read_gml("Network Models/power.gml", label  = 'id'))
+        super().__init__(nx.read_gml("Network Models/power.gml", label='id'))
 
 
 class CurvatureWordAdjacency(CurvatureGraph):
@@ -785,7 +806,8 @@ class CurvatureWordAdjacency(CurvatureGraph):
 
 class CurvatureScotland(CurvatureGraph):
     """
-    A subclass of CurvatureGraph specifically for the Corporate interlocks in Scotland graph.
+    A subclass of CurvatureGraph specifically for
+    the Corporate interlocks in Scotland graph.
     """
     def __init__(self):
         txt = open("Network Models/Scotland.net").readlines()
@@ -796,7 +818,8 @@ class CurvatureScotland(CurvatureGraph):
         mapping = dict(zip(self, range(len(self.nodes))))
         self = nx.relabel_nodes(self, mapping, copy=False)
 
-    def plot_curvature_graph(self, node_col = "blue", ):
+
+    def plot_curvature_graph(self, node_col="blue", ):
         """
         Plot the Southern Women network.
         """
@@ -805,16 +828,12 @@ class CurvatureScotland(CurvatureGraph):
 
         pos = nx.bipartite_layout(self, top_nodes)
 
-        vis.plot_my_graph(self, 
-                            pos,
-                            node_col,
-                            edge_lst=[],
-                            edge_col = "lightgrey",
-                            edge_lab={}, 
-                            bbox=None,
-                            color_map = "tab20", 
-                            alpha = 0.7)
-        
+        vis.plot_my_graph(self, pos,
+                          node_col, edge_lst=[],
+                          edge_col="lightgrey", edge_lab={},
+                          bbox=None, color_map="tab20",
+                          alpha=0.7)
+
 
 class CurvatureSouthernWomen(CurvatureGraph):
     """
@@ -837,18 +856,17 @@ class CurvatureSouthernWomen(CurvatureGraph):
         lines = lines[2:]
 
         # create the graph
-        edge_nodes = [[int(s)  for s in line.split()]  for line in lines]
-        edge_list = [(edge[0] - 1, edge[1] + 17)  for edge in edge_nodes]
-
+        edge_nodes = [[int(s) for s in line.split()] for line in lines]
+        edge_list = [(edge[0] - 1, edge[1] + 17) for edge in edge_nodes]
 
         G = nx.Graph()
         G.add_edges_from(edge_list)
 
         # initialize the graph object
         super().__init__(G)
-        
 
-    def plot_curvature_graph(self, node_col = "blue", ):
+
+    def plot_curvature_graph(self, node_col="blue", ):
         """
         Plot the Southern Women network.
         """
@@ -857,12 +875,8 @@ class CurvatureSouthernWomen(CurvatureGraph):
 
         pos = nx.bipartite_layout(self, top_nodes)
 
-        vis.plot_my_graph(self, 
-                            pos,
-                            node_col,
-                            edge_lst=[],
-                            edge_col = "lightgrey",
-                            edge_lab={}, 
-                            bbox=None,
-                            color_map = "tab20", 
-                            alpha = 0.7)
+        vis.plot_my_graph(self, pos,
+                          node_col, edge_lst=[],
+                          edge_col="lightgrey", edge_lab={},
+                          bbox=None, color_map="tab20",
+                          alpha=0.7)
