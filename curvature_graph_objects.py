@@ -700,7 +700,13 @@ class CurvatureHBG(CurvatureGraph):
         """
         Assign edges to be between or within communities.
         """
-        pass # to be implemented
+        for node in self.nodes:
+            if self.nodes[node]["group"] == "A1" or self.nodes[node]["group"] == "B1":
+                self.nodes[node]["community"] = 0
+            else:
+                self.nodes[node]["community"] = 1
+
+        self = af.assign_edges(self, "community")
 
 
     def plot_curvature_graph(self, node_col=None):
