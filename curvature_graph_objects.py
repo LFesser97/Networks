@@ -371,8 +371,8 @@ class CurvatureGraph(nx.Graph):
                 vis.plot_curvature_hist(
                     [self.edges[edge][curvature] for edge in self.edges],
                     title=title,
-                    x_axis=x_axis,
-                    y_axis=y_axis
+                    x_axis_str=x_axis,
+                    y_axis_str=y_axis
                     )
 
         except KeyError as error:
