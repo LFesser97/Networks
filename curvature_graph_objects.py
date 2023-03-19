@@ -843,6 +843,19 @@ class CurvatureScotland(CurvatureGraph):
                           alpha=0.7)
 
 
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        try:
+            self = af.assign_edges(self, "louvain_community")
+
+        except KeyError:
+            print("No community information found. Assigning node communities using Louvain.")
+            self.detect_louvain_communities()
+            self = af.assign_edges(self, "louvain_community")
+
+
 class CurvatureSouthernWomen(CurvatureGraph):
     """
     A subclass of CurvatureGraph specifically for the Southern Women graph
