@@ -901,3 +901,16 @@ class CurvatureSouthernWomen(CurvatureGraph):
                           edge_col="lightgrey", edge_lab={},
                           bbox=None, color_map="tab20",
                           alpha=0.7)
+        
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        try:
+            self = af.assign_edges(self, "louvain_community")
+
+        except KeyError:
+            print("No community information found. Assigning node communities using Louvain.")
+            self.detect_louvain_communities()
+            self = af.assign_edges(self, "louvain_community")
