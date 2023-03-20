@@ -780,6 +780,25 @@ class CurvatureAMF(CurvatureGraph):
         self = af.assign_edges(self, "value")
 
 
+    def plot_curvature_graph(self, pos=None,
+                             node_col="white", edge_lst=[],
+                             edge_col="lightgrey", edge_lab={},
+                             bbox=None, color_map="Set3", alpha=1):
+        """
+        Plot the AMF graph using the cycle-of-cycles layout.
+        """
+        if pos is None:
+            values = set([d["value"]  for n,d in iter(self.nodes.items())])
+            max_value = list(values)[-1]
+
+            pos = af.get_amf_pos(self, 0.1, 0.6, 0.5, 0.5, max_value, values)
+
+        vis.plot_my_graph(self, pos,
+                          node_col=node_col, edge_lst=edge_lst,
+                          edge_col=edge_col, edge_lab=edge_lab,
+                          bbox=bbox, color_map=color_map, alpha=alpha)
+
+
 class CurvatureDolphins(CurvatureGraph):
     """
     A subclass of CurvatureGraph specifically for the dolphins graph.

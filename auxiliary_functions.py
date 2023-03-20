@@ -100,6 +100,51 @@ def pos_list_as_array(p):
     return d
 
 
+def get_amf_pos(G, sc, rd, cx, cy, mv, val):
+    """
+    Get positions of nodes for the AMF network layout.
+
+    Parameters
+    ----------
+    G : networkx graph
+        Graph to be drawn.
+
+    sc : float
+        Scale of the layout.
+
+    rd : float
+        Radius of the layout.
+
+    cx : float
+        x-coordinate of the center of the layout.
+
+    cy : float
+        y-coordinate of the center of the layout.
+
+    mv : int
+        Maximum value of the node attribute "value".
+
+    val : set
+        Set of values of the node attribute "value".
+
+    Returns
+    -------
+    p : dict
+        Dictionary of positions of nodes.
+    """
+    p = {}
+    cnt = np.array([cx, cy])
+    for v in val:
+        temp = nx.circular_layout(
+                    nx.subgraph(G, [n for n, d in iter(G.nodes.items()) if d["value"] == v]),
+                    scale=sc,
+                    center=cnt + np.array([rd * np.cos(v/(mv+1)*2*np.pi),
+                                           rd * np.sin(v/(mv+1)*2*np.pi)])
+                    )
+        p.update(temp)
+    return p
+
+
 def build_size_list(k, l):
     """
     Build list of number of nodes per community.
