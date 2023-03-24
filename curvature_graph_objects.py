@@ -172,7 +172,7 @@ class CurvatureGraph(nx.Graph):
             affected_edges = self.edges()
 
         for edge in list(affected_edges):
-            self.edges[edge]['afrc'] = cc.AugFormanSq(edge, self)
+            self.edges[edge]['afrc'] = cc.AugFormanSq_semisparse(edge, self)
 
 
     def compute_afrc_3(self, affected_edges=None):
