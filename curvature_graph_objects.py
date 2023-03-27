@@ -38,7 +38,6 @@ class CurvatureGraph(nx.Graph):
     and adds additional attributes and methods related to graph curvature.
     Used to create subclasses for artificial and real graphs.
     """
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
