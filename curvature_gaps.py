@@ -60,7 +60,7 @@ def compute_curvature_gap(Gr, curv_name, cmp_key="block"):
     return res_diffs
 
 
-def find_threshold(G, curv_name, param, cmp_key):
+def find_threshold(G, curv_name, cmp_key):
     """
     Model the curvature distribution with a mixture of two Gaussians.
     Find the midpoint between the means of the two Gaussians.
@@ -72,9 +72,6 @@ def find_threshold(G, curv_name, param, cmp_key):
 
     curv_name : str
         The name of the curvature to be used.
-
-    param : float
-        The parameter that determines the threshold. Default is 0.5.
 
     cmp_key : str
         The key of the node attribute that contains the community assignment.
@@ -93,7 +90,15 @@ def find_threshold(G, curv_name, param, cmp_key):
     # using GaussianMixture.fit() from sklearn.mixture
     gmm = GaussianMixture(n_components=2, random_state=0).fit(curv_vals)
 
-    # find the midpoint between the means of the two Gaussians
-    threshold = param * (gmm.means_[0] + gmm.means_[1])
+    # get the mean and standard deviations of the first Gaussian
+    mean1 = gmm.means_[0][0]
+    std1 = np.sqrt(gmm.covariances_[0][0][0])
+
+    # get the mean and standard deviations of the second Gaussian
+    mean2 = gmm.means_[1][0]
+    std2 = np.sqrt(gmm.covariances_[1][0][0])
+
+    # compute the threshold as the weighted mean of the two means
+    threshold = (mean1 * std1 + mean2 * std2) / (std1 + std2)
 
     return threshold
