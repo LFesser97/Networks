@@ -807,12 +807,38 @@ class CurvatureDolphins(CurvatureGraph):
         self = nx.relabel_nodes(self, mapping, copy=False)
 
 
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        try:
+            self = af.assign_edges(self, "louvain_community")
+
+        except KeyError:
+            print("No Louvain communities detected. Computing them now.")
+            self.detect_louvain_communities()
+            self.assign_edges()
+
+
 class CurvatureUSPowerGrid(CurvatureGraph):
     """
     A subclass of CurvatureGraph specifically for the US power grid graph.
     """
     def __init__(self):
         super().__init__(nx.read_gml("Network Models/power.gml", label='id'))
+
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        try:
+            self = af.assign_edges(self, "louvain_community")
+
+        except KeyError:
+            print("No Louvain communities detected. Computing them now.")
+            self.detect_louvain_communities()
+            self.assign_edges()
 
 
 class CurvatureWordAdjacency(CurvatureGraph):
@@ -825,6 +851,19 @@ class CurvatureWordAdjacency(CurvatureGraph):
         # relabel node names with integers using nx.relabel_nodes
         mapping = dict(zip(self, range(len(self.nodes))))
         self = nx.relabel_nodes(self, mapping, copy=False)
+
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        try:
+            self = af.assign_edges(self, "louvain_community")
+
+        except KeyError:
+            print("No Louvain communities detected. Computing them now.")
+            self.detect_louvain_communities()
+            self.assign_edges()
 
 
 class CurvatureScotland(CurvatureGraph):

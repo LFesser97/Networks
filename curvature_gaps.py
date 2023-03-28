@@ -43,7 +43,7 @@ def compute_curvature_gap(Gr, curv_name, cmp_key="block"):
     for k in c_dict.keys():
         c_dict[k][curv_name] = {"data": [], "mean": 0, "std": 0}
 
-    for u, v, d in Gr.edges.data():                            
+    for u, v, d in Gr.edges.data():      
         if Gr.nodes[u][cmp_key] == Gr.nodes[v][cmp_key]:
             c_dict["withins"][curv_name]["data"].append(Gr.edges[u, v][curv_name])
         else:
