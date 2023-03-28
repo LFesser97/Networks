@@ -689,7 +689,7 @@ class CurvatureHBG(CurvatureGraph):
         """
         Compute the curvature gap for the graph.
         """
-        self.curvature_gap[curv_name] = cg.hbg_compute_curvature_gap(self, curv_name)
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "community")
 
 
     def assign_edges(self):
