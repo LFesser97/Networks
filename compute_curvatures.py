@@ -228,7 +228,7 @@ def get_orc_edge_curvatures(G):
     -------
     None.
     """
-    orc = OllivierRicci(G, alpha=0.5, verbose="ERROR")
+    orc = OllivierRicci(G, alpha=0, verbose="ERROR") # might have to change this back to 0.5
     orc.compute_ricci_curvature()
 
     for (u, v) in list(orc.G.edges()):
