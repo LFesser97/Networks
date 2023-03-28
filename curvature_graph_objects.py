@@ -820,6 +820,13 @@ class CurvatureDolphins(CurvatureGraph):
             self.assign_edges()
 
 
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
+
+
 class CurvatureUSPowerGrid(CurvatureGraph):
     """
     A subclass of CurvatureGraph specifically for the US power grid graph.
@@ -839,6 +846,13 @@ class CurvatureUSPowerGrid(CurvatureGraph):
             print("No Louvain communities detected. Computing them now.")
             self.detect_louvain_communities()
             self.assign_edges()
+
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
 
 
 class CurvatureWordAdjacency(CurvatureGraph):
@@ -864,6 +878,13 @@ class CurvatureWordAdjacency(CurvatureGraph):
             print("No Louvain communities detected. Computing them now.")
             self.detect_louvain_communities()
             self.assign_edges()
+
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
 
 
 class CurvatureScotland(CurvatureGraph):
@@ -908,6 +929,13 @@ class CurvatureScotland(CurvatureGraph):
             print("No community information found. Assigning node communities using Louvain.")
             self.detect_louvain_communities()
             self = af.assign_edges(self, "louvain_community")
+
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
 
 
 class CurvatureSouthernWomen(CurvatureGraph):
@@ -968,3 +996,10 @@ class CurvatureSouthernWomen(CurvatureGraph):
             print("No community information found. Assigning node communities using Louvain.")
             self.detect_louvain_communities()
             self = af.assign_edges(self, "louvain_community")
+
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "louvain_community")
