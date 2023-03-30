@@ -297,6 +297,46 @@ class CurvatureGraph(nx.Graph):
             self.count_pentagons()
 
 
+    def compute_curvature_difference(self, curvature1, curvature2):
+        """
+        Compute the difference between two curvatures.
+        """
+        try:
+            for edge in list(self.edges()):
+                self.edges[edge]["diff_" + curvature1 + "_" + curvature2] = self.edges[edge][curvature1] - self.edges[edge][curvature2]
+
+        except KeyError as error:
+            if error.args[0] == "frc":
+                print("Forman-Ricci curvature not found. Computing it now.")
+                self.compute_frc()
+                self.compute_curvature_difference(curvature1, curvature2)
+
+            elif error.args[0] == "orc":
+                print("Ollivier-Ricci curvature not found. Computing it now.")
+                self.compute_orc()
+                self.compute_curvature_difference(curvature1, curvature2)
+
+            elif error.args[0] == "afrc":
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
+                self.compute_afrc()
+                self.compute_curvature_difference(curvature1, curvature2)
+
+            elif error.args[0] == "afrc_3":
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
+                self.compute_afrc_3()
+                self.compute_curvature_difference(curvature1, curvature2)
+
+            elif error.args[0] == "afrc_4":
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
+                self.compute_afrc_4()
+                self.compute_curvature_difference(curvature1, curvature2)
+
+            elif error.args[0] == "afrc_5":
+                print("Augmented Forman-Ricci curvature not found. Computing it now.")
+                self.compute_afrc_5()
+                self.compute_curvature_difference(curvature1, curvature2)
+
+
     def compute_correlation(self, curvature1, curvature2):
         """
         Compute the correlation between two curvatures.

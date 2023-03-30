@@ -273,7 +273,7 @@ def AugFormanSq_semisparse(e, G):
     Sq = 0
     neigh_0 = [i for i in G[e[0]] if i != e[1]]
     for i in neigh_0:         # for all neighbors of first node
-        for j in set(G[i]) & set(G[e[1]]) - {e[0]}:   # for all nodes forming a square with first node, neighbors of first node, and second noce
+        for j in set(G[i]) & set(G[e[1]]) - {e[0]}:   # for all nodes forming a square with first node, neighbors of first node, and second node
             Sq += 1
             E[min(e[0], i)][max(e[0], i)] += 1
             E[min(e[1], j)][max(e[1], j)] += 1

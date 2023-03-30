@@ -223,3 +223,60 @@ def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     ax.tick_params(axis='both', labelsize=16)
     ax.grid(visible=True, axis="both")
     plt.show()
+
+
+def plot_curvature_differences(G, curvature_difference, title=''):
+    """
+    Plot the difference between two curvatures at an edge level.
+
+    Parameters
+    ----------
+    G : networkx.classes.graph.Graph
+        The graph to show the curvature differences for.
+
+    curvature_difference : str
+        The curvature difference to show.
+    
+    title : str
+        The title to use for the plot.
+
+    Returns
+    -------
+    None.
+        Plots the graph with the curvature differences colore-coded.
+        Negative values are colored red and positive values are colored green,
+        with the intensity of the color representing the magnitude of the difference.
+    """
+    try :
+        edge_col = []
+        for edge in G.edges:
+            edge_curv = curvature_difference[edge]
+            if edge_curv < 0:
+                edge_col.append('red')
+            elif edge_curv > 0:
+                edge_col.append('green')
+            else:
+                edge_col.append('black')
+        node_col = ['white' for node in G.nodes]
+        node_options = {
+            "node_size": 100,
+            "alpha": 0.8,
+            "edgecolors": "black",
+            "linewidths": 0.5,
+            "with_labels": True,
+            "edgelist": None
+            }
+        edge_options = {
+            "width": 0.5
+            }
+        fig = plt.figure(figsize=(15, 15))
+        nx.draw_networkx(G, pos, node_color=node_col,
+                        edge_color=edge_col, **node_options)
+        nx.draw_networkx_edges(G, pos, edge_lst,
+                            edge_color=edge_col, **edge_options)
+        plt.gca().margins(0.20)
+        plt.title(title)
+        plt.show()
+
+    except KeyError:
+        print("This curvature difference has not been calculated for this graph.")

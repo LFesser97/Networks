@@ -300,8 +300,8 @@ def read_pos_sbm(k, n):
 
 def get_bipartite_graph(n=40, m=40, p_high=0.7, p_low=0.2):
     """
-    Builds a bipartite graph with groups A (with subgroups A1 and A2) and B (with subgroups B1 and B2), 
-    adds edges between subgroups A1-B1 and A2-B2 with high probability and 
+    Builds a bipartite graph with groups A (with subgroups A1 and A2) and B (with subgroups B1 and B2),
+    adds edges between subgroups A1-B1 and A2-B2 with high probability and
     edges between subgroups A1-B2 and A2-B1 with low probability
 
     Parameters
