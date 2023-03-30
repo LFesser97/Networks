@@ -247,10 +247,11 @@ def plot_curvature_differences(G, curvature_difference, title):
         Negative values are colored red and positive values are colored green,
         with the intensity of the color representing the magnitude of the difference.
     """
-    try :
+    try:
         edge_col = []
+        pos = nx.get_node_attributes(G, 'pos')
         for edge in G.edges:
-            edge_curv = curvature_difference[edge]
+            edge_curv = edge[2][curvature_difference]
             if edge_curv < 0:
                 edge_col.append('red')
             elif edge_curv > 0:
@@ -266,15 +267,9 @@ def plot_curvature_differences(G, curvature_difference, title):
             "with_labels": True,
             "edgelist": None
             }
-        edge_options = {
-            "width": 0.5
-            }
         fig = plt.figure(figsize=(15, 15))
         nx.draw_networkx(G, pos, node_color=node_col,
                         edge_color=edge_col, **node_options)
-        nx.draw_networkx_edges(G, pos, edge_lst,
-                            edge_color=edge_col, **edge_options)
-        plt.gca().margins(0.20)
         plt.title(title)
         plt.show()
 
