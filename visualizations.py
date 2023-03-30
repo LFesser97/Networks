@@ -236,7 +236,7 @@ def plot_curvature_differences(G, curvature_difference, title):
 
     curvature_difference : str
         The curvature difference to show.
-    
+
     title : str
         The title to use for the plot.
 
@@ -250,7 +250,7 @@ def plot_curvature_differences(G, curvature_difference, title):
     try:
         edge_col = []
         pos = nx.get_node_attributes(G, 'pos')
-        for edge in G.edges:
+        for edge in G.edges.data():
             edge_curv = edge[2][curvature_difference]
             if edge_curv < 0:
                 edge_col.append('red')

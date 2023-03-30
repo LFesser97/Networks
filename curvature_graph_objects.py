@@ -102,7 +102,7 @@ class CurvatureGraph(nx.Graph):
                           edge_col, edge_lab,
                           bbox, color_map,
                           alpha)
-        
+
 
     def plot_curvature_differences(self, curvature_difference, title=''):
         """
