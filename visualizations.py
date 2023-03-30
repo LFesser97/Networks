@@ -225,7 +225,7 @@ def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     plt.show()
 
 
-def plot_curvature_differences(G, curvature_difference, title=''):
+def plot_curvature_differences(G, curvature_difference, title):
     """
     Plot the difference between two curvatures at an edge level.
 

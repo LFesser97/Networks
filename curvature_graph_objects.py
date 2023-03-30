@@ -102,6 +102,13 @@ class CurvatureGraph(nx.Graph):
                           edge_col, edge_lab,
                           bbox, color_map,
                           alpha)
+        
+
+    def plot_curvature_differences(self, curvature_difference, title=''):
+        """
+        Plot the graph with curvature differences on the edges.
+        """
+        vis.plot_curvature_differences(self, curvature_difference, title)
 
 
     def detect_louvain_communities(self):
