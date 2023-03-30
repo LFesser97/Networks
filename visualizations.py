@@ -225,7 +225,7 @@ def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     plt.show()
 
 
-def plot_curvature_differences(G, curvature_difference, title):
+def plot_curvature_differences(G, curvature_difference):
     """
     Plot the difference between two curvatures at an edge level.
 
@@ -237,9 +237,6 @@ def plot_curvature_differences(G, curvature_difference, title):
     curvature_difference : str
         The curvature difference to show.
 
-    title : str
-        The title to use for the plot.
-
     Returns
     -------
     None.
@@ -248,30 +245,26 @@ def plot_curvature_differences(G, curvature_difference, title):
         with the intensity of the color representing the magnitude of the difference.
     """
     try:
-        edge_col = []
-        pos = nx.get_node_attributes(G, 'pos')
-        for edge in G.edges.data():
-            edge_curv = edge[2][curvature_difference]
-            if edge_curv < 0:
-                edge_col.append('red')
-            elif edge_curv > 0:
-                edge_col.append('green')
-            else:
-                edge_col.append('black')
-        node_col = ['white' for node in G.nodes]
-        node_options = {
-            "node_size": 100,
-            "alpha": 0.8,
-            "edgecolors": "black",
-            "linewidths": 0.5,
-            "with_labels": True,
-            "edgelist": None
-            }
-        fig = plt.figure(figsize=(15, 15))
-        nx.draw_networkx(G, pos, node_color=node_col,
-                        edge_color=edge_col, **node_options)
-        plt.title(title)
-        plt.show()
+        # create a list of the curvature differences
+        curv_diff_list = [edge[2][curvature_difference] for edge in G.edges.data()]
+    
+        # get the smallest and largest values in the data
+        min_val = min(curv_diff_list)
+        max_val = max(curv_diff_list)
 
+        # create a colormap
+        cmap = plt.cm.get_cmap('RdBu')
+        norm = plt.Normalize(vmin=min_val, vmax=max_val)
+
+        # create a list of colors for each edge
+        colors = [cmap(norm(value)) for value in curv_diff_list]
+
+        # plot the graph with the edges colored using plot_my_graph
+        plot_my_graph(G, pos=G.pos, 
+                      node_col="white", edge_lst=[],
+                      edge_col=colors, edge_lab={},
+                      bbox=None, color_map="Set3",
+                      alpha=1.0)
+                          
     except KeyError:
         print("This curvature difference has not been calculated for this graph.")
