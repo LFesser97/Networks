@@ -181,6 +181,18 @@ class CurvatureGraph(nx.Graph):
             self.edges[edge]['afrc'] = cc.AugFormanSq_semisparse(edge, self)
 
 
+    def compute_afrc_pentagons(self, affected_edges=None):
+        """
+        Compute the 5-cycle-augmented Forman-Ricci curvature of the graph.
+        """
+        if affected_edges is None:
+            affected_edges = self.edges()
+
+        for edge in list(affected_edges):
+            self.edges[edge]['afrc_pent'] = cc.AugFormanPent(edge, self)
+
+
+
     def compute_afrc_3(self, affected_edges=None):
         """
         Compute the augmented Forman-Ricci curvature of the graph.
