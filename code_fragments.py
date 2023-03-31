@@ -414,3 +414,46 @@ def detect_communities_nonsequential(G, t_coeff=3, q_coeff=2):
     # set node colors acc to cluster
     G = set_node_labels(G,C)
     return G
+
+
+"""     NEED TO REPLACE THIS WITH THE IMPROVED ALGORITHM    """
+def AugFormanSq(e,G):
+    
+    E=np.zeros([len(G), len(G)]) #Matrix of edge contributions
+    FR=0
+   
+    #Add a -1 to the contribution of all edges sharing a node with e
+    for i in (set(G[e[0]]) - {e[1]}):
+         E[min(e[0],i)][max(e[0],i)] = -1
+    
+    for i in (set(G[e[1]]) - {e[0]}):
+         E[min(e[1],i)][max(e[1],i)] = -1
+    
+    #Count triangles, and add +1 to the contribution of edges contained in a triangle with e
+    T=len(set(G[e[0]]) & set(G[e[1]]))
+
+    
+    for i in (set(G[e[0]]) & set(G[e[1]])):
+        E[min(e[0],i)][max(e[0],i)] += 1
+        E[min(e[1],i)][max(e[1],i)] += 1
+    
+    #Count squares,
+    #Add +1 to each edge neighbour to e contained in a square with it
+    #Add +1 or -1 for edges not touching e contained in a square with it (the matrix lets us keep track of both orientations separately)
+    Sq=0
+    neigh_0= [i for i in G[e[0]] if i!=e[1]]
+    for i in neigh_0:
+        for j in (set(G[i]) & set(G[e[1]]) - {e[0]}):
+            Sq +=1
+            E[min(e[0],i)][max(e[0],i)] += 1
+            E[min(e[1],j)][max(e[1],j)] += 1
+            E[i][j] += 1
+    
+    
+    FR += 2 + T + Sq
+
+    for i in range(len(G)):
+        for j in range(i,len(G)):
+            FR += -abs(E[i][j]-E[j][i])
+            
+    return FR

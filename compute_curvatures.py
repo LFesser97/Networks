@@ -296,8 +296,9 @@ def AugFormanSq_semisparse(e, G):
     return FR
 
 
-"""     NEED TO REPLACE THIS WITH THE IMPROVED ALGORITHM    """
-def AugFormanSq(e,G):
+""" NEED TO REPLACE THE CODE BELOW """
+
+def AugFormanPent(e,G): # Returns pentagon-augmented curvature. Arguments: an edge e of a graph G
     
     E=np.zeros([len(G), len(G)]) #Matrix of edge contributions
     FR=0
@@ -329,8 +330,21 @@ def AugFormanSq(e,G):
             E[min(e[1],j)][max(e[1],j)] += 1
             E[i][j] += 1
     
+
+    #Same as with squares, but for pentagons        
+    Pent=0
+    neigh_1= [i for i in G[e[1]] if i!=e[0]]
+    for i in neigh_0:
+        for j in neigh_1:
+            if i != j:
+                for k in (set(G[i]) & set(G[j]) - {e[0],e[1]}):
+                    Pent += 1
+                    E[min(e[0],i)][max(e[0],i)] += 1
+                    E[min(e[1],j)][max(e[1],j)] += 1
+                    E[i][k] += 1
+                    E[k][j] += 1
     
-    FR += 2 + T + Sq
+    FR += 2 + T + Sq + Pent
 
     for i in range(len(G)):
         for j in range(i,len(G)):
