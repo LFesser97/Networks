@@ -38,8 +38,6 @@ def show_line_plots():
     axes[1].grid(visible=True, axis="both")
     plt.show()
 
-show_line_plots()
-
 
 def show_histos (G, title_str, bin_width = 1): # HOW IS THIS DIFFERENT FROM THE 50 OTHER HISTOGRAM FUNCTIONS?
     """

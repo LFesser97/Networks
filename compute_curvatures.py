@@ -331,7 +331,7 @@ def AugFormanPent(e,G): # Returns pentagon-augmented curvature. Arguments: an ed
             E[i][j] += 1
     
 
-    #Same as with squares, but for pentagons        
+    #Same as with squares, but for pentagons 
     Pent=0
     neigh_1= [i for i in G[e[1]] if i!=e[0]]
     for i in neigh_0:

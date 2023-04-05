@@ -783,6 +783,43 @@ class CurvatureHBG(CurvatureGraph):
                                     for u, v, d in self.edges.data()],
                           edge_lab={}, bbox=None,
                           color_map="tab20", alpha=0.7)
+        
+
+class CurvatureT_SBM(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for SBMs whose blocks are trees.
+    """
+    def __init__(self, l, k, p, q):
+        super().__init__(cn.create_t_sbm(l, k, p, q))
+
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name)
+
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        self = af.assign_edges(self, "block")
+
+
+    def plot_curvature_graph(self, pos=None, node_col="white",
+                             edge_lst=[], edge_col="lightgrey",
+                             edge_lab={}, bbox=None, color_map="Set3", alpha=1):
+        """
+        Plot the graph with the nodes colored by their block affiliation.
+        """
+        if node_col == "white":
+            node_col = [self.nodes[node]["block"] for node in self.nodes]
+
+        super().plot_curvature_graph(pos, node_col,
+                                     edge_lst, edge_col,
+                                     edge_lab, bbox,
+                                     color_map, alpha)
 
 
 # define subclasses for real graphs
