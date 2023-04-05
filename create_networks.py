@@ -111,7 +111,7 @@ def create_t_sbm(num_blocks, num_nodes, p, q):
     # create num_blocks trees with num_nodes nodes each
     G = nx.empty_graph(num_blocks * num_nodes)
     for i in range(num_blocks):
-        G.add_edges_from(nx.random_tree(num_nodes - 1).edges)
+        G.add_edges_from(nx.random_tree(num_nodes).edges)
 
         # allocate the nodes to the blocks
         for j in range(num_nodes):
