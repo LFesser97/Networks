@@ -113,6 +113,10 @@ def create_t_sbm(num_blocks, num_nodes, p, q):
     for i in range(num_blocks):
         G.add_edges_from(nx.random_tree(num_nodes - 1).edges)
 
+        # allocate the nodes to the blocks
+        for j in range(num_nodes):
+            G.nodes[i * num_nodes + j]['block'] = i
+
     # add edges within the blocks
     if p > 0:
         for i in range(num_blocks):
