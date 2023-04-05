@@ -85,7 +85,7 @@ def determine_between_edges(node_affiliations,
 
 # function for creating a Tree-Stochastic Block Model (T_SBM)
 
-def create_t_sbm(num_blocks, num_nodes, p, q, seed=None):
+def create_t_sbm(num_blocks, num_nodes, p, q):
     """
     Create a Tree-Stochastic Block Model (T_SBM).
 
@@ -103,9 +103,6 @@ def create_t_sbm(num_blocks, num_nodes, p, q, seed=None):
     q : float
         Probability of an edge between nodes in different blocks.
 
-    seed : int, optional
-        Seed for the random number generator.
-
     Returns
     -------
     G : NetworkX graph
@@ -114,18 +111,15 @@ def create_t_sbm(num_blocks, num_nodes, p, q, seed=None):
     # create num_blocks trees with num_nodes nodes each
     G = nx.empty_graph(num_blocks * num_nodes)
     for i in range(num_blocks):
-        G.add_edges_from(nx.balanced_tree(2, num_nodes - 1, seed).edges)
-
-        # add "block" label to each node
-        for j in range(i * num_nodes, (i + 1) * num_nodes):
-            G.nodes[j]["block"] = i
+        G.add_edges_from(nx.random_tree(num_nodes - 1).edges)
 
     # add edges within the blocks
-    for i in range(num_blocks):
-        for j in range(i * num_nodes, (i + 1) * num_nodes):
-            for k in range(j + 1, (i + 1) * num_nodes):
-                if np.random.random() < p:
-                    G.add_edge(j, k)
+    if p > 0:
+        for i in range(num_blocks):
+            for j in range(i * num_nodes, (i + 1) * num_nodes):
+                for k in range(j + 1, (i + 1) * num_nodes):
+                    if np.random.random() < p:
+                        G.add_edge(j, k)
 
     # add edges between the blocks
     for i in range(num_blocks):
