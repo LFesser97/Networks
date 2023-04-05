@@ -113,8 +113,12 @@ def create_t_sbm(num_blocks, num_nodes, p, q):
     for i in range(num_blocks):
         H = nx.random_tree(num_nodes)
 
-        # compose the trees
-        G = nx.compose(G, H)
+        # add the nodes and edges of H to G
+        for j in range(num_nodes):
+            G.add_node(i * num_nodes + j)
+            for k in range(j + 1, num_nodes):
+                if H.has_edge(j, k):
+                    G.add_edge(i * num_nodes + j, i * num_nodes + k)
 
         # allocate the nodes to the blocks
         for j in range(num_nodes):
