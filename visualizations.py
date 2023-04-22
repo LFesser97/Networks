@@ -265,6 +265,50 @@ def plot_curvature_differences(G, curvature_difference):
                       edge_col=colors, edge_lab={},
                       bbox=None, color_map="Set3",
                       alpha=1.0)
-                          
+
     except KeyError:
         print("This curvature difference has not been calculated for this graph.")
+
+
+def plot_clustering_accuracy(clustering_accuracy, x_axis, title=''):
+    """
+    Plot the clustering accuracy given a list of accuracy values.
+
+    Parameters
+    ----------
+    clustering_accuracy : dict[float, list[float]]
+        The clustering accuracy values to plot.
+
+    x_axis : str
+        The x-axis label.
+
+    title : str, optional
+        The title to use for the plot. The default is ''.
+
+    Returns
+    -------
+    None.
+        Plots the clustering accuracy.
+    """
+    # for each key in the dictionary, compute the mean and standard deviation
+    # of the values in the list
+    mean_list = []
+    std_list = []
+
+    for key in clustering_accuracy:
+        mean_list.append(np.mean(clustering_accuracy[key]))
+        std_list.append(np.std(clustering_accuracy[key]))
+
+    # plot the mean as a line and the standard deviation as a shaded area
+    fig, ax = plt.subplots(figsize=(14, 10))
+    ax.plot(clustering_accuracy.keys(), mean_list, color="blue")
+    ax.fill_between(clustering_accuracy.keys(),
+                    np.array(mean_list) - np.array(std_list),
+                    np.array(mean_list) + np.array(std_list),
+                    color="blue", alpha=0.2)
+    ax.set_title(title, fontsize=20)
+    ax.set_xlabel(x_axis, fontsize=16)
+    ax.set_ylabel("Mean Prediction Accuracy", fontsize=16)
+    ax.tick_params(axis='both', labelsize=16)
+
+    plt.show()

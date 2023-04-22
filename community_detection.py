@@ -229,3 +229,79 @@ def set_node_labels(G, C, curvature):
     for i, c in enumerate(C):
         for u in c:
             G.nodes[u][curvature + "_community"] = i
+
+
+def get_clustering_accuracy(network_type, network, curvature, threshold=0):
+    """
+    Get clustering accuracy for a given network
+
+    Parameters
+    ----------
+    network_type : str
+        The type of network
+
+    network : nx.Graph
+        A networkx graph
+
+    curvature : str
+        The curvature to be used for community detection.
+
+    threshold : int, optional
+        The threshold for the curvature. The default is 0.
+
+    Returns
+    -------
+    accuracy : float
+        Clustering accuracy
+    """
+    # assert that network_type is either "sbm" or "hbg"
+    assert network_type in ["sbm", "hbg"], "network_type must be either 'sbm' or 'hbg'"
+
+    # get ground truth labels
+    if network_type == "sbm":
+        ground_truth = {}
+
+        for node in network.nodes:
+            block = network.nodes[node]["block"]
+
+            if block not in ground_truth:
+                ground_truth[block] = [node]
+
+            else:
+                ground_truth[block].append(node)
+
+    elif network_type == "hbg":
+        ground_truth = {0 : [], 1 : []}
+
+        for node in network.nodes:
+            if network.nodes[node]["group"] == "A1" or network.nodes[node]["group"] == "B1":
+                ground_truth[0].append(node)
+
+            else:
+                ground_truth[1].append(node)
+
+    # run community detection
+    network.detect_communities(curvature, threshold)
+
+    # get predicted labels
+    predicted = {}
+
+    for node in network.nodes:
+        community = network.nodes[node][curvature + "_community"]
+
+        if community not in predicted:
+            predicted[community] = [node]
+
+        else:
+            predicted[community].append(node)
+
+    # calculate clustering accuracy as the percentage of correctly detected communities
+    accuracy = 0
+
+    for community in ground_truth:
+        if ground_truth[community] in predicted.values():
+            accuracy += 1
+
+    accuracy = accuracy / len(ground_truth)
+
+    return accuracy
