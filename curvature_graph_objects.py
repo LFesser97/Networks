@@ -524,6 +524,21 @@ class CurvatureGraph(nx.Graph):
                 self.compute_afrc()
                 self.detect_communities(curvature, threshold)
 
+            elif error.args[0] == "afrc_3":
+                print("Augmented Forman-Ricci curvature (3) not found. Computing it now.")
+                self.compute_afrc_3()
+                self.detect_communities(curvature, threshold)
+
+            elif error.args[0] == "afrc_4":
+                print("Augmented Forman-Ricci curvature (4) not found. Computing it now.")
+                self.compute_afrc_4()
+                self.detect_communities(curvature, threshold)
+
+            elif error.args[0] == "afrc_5":
+                print("Augmented Forman-Ricci curvature (5) not found. Computing it now.")
+                self.compute_afrc_5()
+                self.detect_communities(curvature, threshold)
+
 
 # define subclasses for artificial graphs
 
@@ -535,7 +550,7 @@ class CurvatureSBM(CurvatureGraph):
         sizes = af.build_size_list(k, l)
         probs = af.build_prob_list(l, p_in, p_out)
 
-        super().__init__(nx.stochastic_block_model(sizes, probs, seed=0))
+        super().__init__(nx.stochastic_block_model(sizes, probs, seed = np.random.randint(0, 1000)))
 
 
     def compute_curvature_gap(self, curv_name):

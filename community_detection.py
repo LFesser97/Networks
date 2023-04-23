@@ -271,7 +271,7 @@ def get_clustering_accuracy(network_type, network, curvature, threshold=0):
                 ground_truth[block].append(node)
 
     elif network_type == "hbg":
-        ground_truth = {0 : [], 1 : []}
+        ground_truth = {0: [], 1: []}
 
         for node in network.nodes:
             if network.nodes[node]["group"] == "A1" or network.nodes[node]["group"] == "B1":
