@@ -300,11 +300,13 @@ def plot_clustering_accuracy(clustering_accuracy, x_axis, title=''):
         std_list.append(np.std(clustering_accuracy[key]))
 
     # plot the mean as a line and the standard deviation as a shaded area
+    # unless the mean minus the standard deviation is less than zero or the
+    # mean plus the standard deviation is greater than one
     fig, ax = plt.subplots(figsize=(14, 10))
     ax.plot(clustering_accuracy.keys(), mean_list, color="blue")
     ax.fill_between(clustering_accuracy.keys(),
-                    np.array(mean_list) - np.array(std_list),
-                    np.array(mean_list) + np.array(std_list),
+                    [max(0, mean - std) for mean, std in zip(mean_list, std_list)],
+                    [min(1, mean + std) for mean, std in zip(mean_list, std_list)],
                     color="blue", alpha=0.2)
     ax.set_title(title, fontsize=20)
     ax.set_xlabel(x_axis, fontsize=16)
