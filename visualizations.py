@@ -308,10 +308,13 @@ def plot_clustering_accuracy(clustering_accuracy, x_axis,
     # mean plus the standard deviation is greater than one
     fig, ax = plt.subplots(figsize=(14, 10))
     ax.plot(clustering_accuracy.keys(), mean_list, color="blue")
-    ax.fill_between(clustering_accuracy.keys(),
-                    [max(0, mean - std) for mean, std in zip(mean_list, std_list)],
-                    [min(1, mean + std) for mean, std in zip(mean_list, std_list)],
-                    color="blue", alpha=0.2)
+
+    if y_axis = 'Mean Prediction Accuracy':
+        ax.fill_between(clustering_accuracy.keys(),
+                        [max(0, mean - std) for mean, std in zip(mean_list, std_list)],
+                        [min(1, mean + std) for mean, std in zip(mean_list, std_list)],
+                        color="blue", alpha=0.2)
+        
     ax.set_title(title, fontsize=20)
     ax.set_xlabel(x_axis, fontsize=16)
     ax.set_ylabel(y_axis, fontsize=16)
