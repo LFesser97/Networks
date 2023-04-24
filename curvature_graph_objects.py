@@ -132,7 +132,7 @@ class CurvatureGraph(nx.Graph):
         Get the cycles of the graph.
         """
         all_cycles = []
-        for cycle in cc.simple_cycles(self.to_directed(), 5): # need to change this back to 6 later
+        for cycle in cc.simple_cycles(self.to_directed(), 4): # need to change this back to 6 later
             all_cycles.append(cycle)
 
         self.cycles["triangles"] = [cycle for cycle in all_cycles
