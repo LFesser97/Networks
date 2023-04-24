@@ -92,11 +92,17 @@ def detect_communities(G, curvature, threshold):
         elif curvature == "orc":
             G_copy.compute_orc(affected_edges=affecteds + threshold_edges)
 
+        elif curvature == "afrc_3":
+            G_copy.compute_afrc_3(affected_edges=affecteds + threshold_edges)
+
+        elif curvature == "afrc_4":
+            G_copy.compute_afrc_4(affected_edges=affecteds + threshold_edges)
+
         if affecteds + threshold_edges != []:
             curv_min, curv_max = get_min_max_curv_values(G_copy, curvature,
                                                          affecteds + threshold_edges)
 
-        # collect edges with extremal negative curvature
+        # collect edges with extremal curvature
         if curvature == "afrc":
             threshold_list = [edge for edge in G_copy.edges.data()
                               if (edge[2][curvature] > threshold)]
