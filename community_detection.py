@@ -62,8 +62,6 @@ def detect_communities(G, curvature, threshold):
         val_list = [edge for edge in threshold_list
                     if (edge[2][curvature] == curv_min)]
 
-    removed_edges = []
-
     while len(val_list) > 0:
         if len(val_list) == 1:
             # edge is the only element in the list
@@ -76,13 +74,16 @@ def detect_communities(G, curvature, threshold):
         threshold_list.remove(extremum)
 
         # remove chosen edge
-        removed_edges.append((u, v))
-
         G_copy.remove_edge(u, v)
         affecteds = list(G_copy.edges([u, v]))
         threshold_edges = [(u, v) for u, v, d in threshold_list]
 
         # update graph attributes and calculate new curvature values
+
+        # recount cycles
+        G_copy.get_cycles()
+
+        # recompute curvature values
         if curvature == "frc":
             G_copy.compute_frc(affected_edges=affecteds + threshold_edges)
 
