@@ -80,8 +80,12 @@ def detect_communities(G, curvature, threshold):
 
         # update graph attributes and calculate new curvature values
 
-        # recount cycles
-        G_copy.get_cycles()
+        # delete all the cycles involving (u, v) from G_copy.cycles['triangles']
+        G_copy.cycles['triangles'] = [cycle for cycle in G_copy.cycles['triangles']
+                                      if (u, v) not in cycle]
+        
+        G_copy.cycles['quadrangles'] = [cycle for cycle in G_copy.cycles['quadrangles']
+                                        if (u, v) not in cycle]
 
         # recompute curvature values
         if curvature == "frc":
