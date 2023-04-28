@@ -387,7 +387,6 @@ def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accura
                         [min(1, mean + std) for mean, std in zip(mean_list_2, std_list_2)],
                         color="red", alpha=0.2)
         
-    ax.set_title(title, fontsize=20)
     ax.set_xlabel(x_axis, fontsize=20)
     ax.set_ylabel(y_axis, fontsize=20)
     ax.tick_params(axis='both', labelsize=20)
