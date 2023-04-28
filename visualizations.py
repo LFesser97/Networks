@@ -314,10 +314,83 @@ def plot_clustering_accuracy(clustering_accuracy, x_axis,
                         [max(0, mean - std) for mean, std in zip(mean_list, std_list)],
                         [min(1, mean + std) for mean, std in zip(mean_list, std_list)],
                         color="blue", alpha=0.2)
-        
+
     ax.set_title(title, fontsize=20)
     ax.set_xlabel(x_axis, fontsize=16)
     ax.set_ylabel(y_axis, fontsize=16)
     ax.tick_params(axis='both', labelsize=16)
+
+    plt.show()
+
+
+def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accuracy_2,
+                                        x_axis, y_axis='Mean Prediction Accuracy',
+                                        title_1='', title_2=''):
+    """
+    Compare the clustering accuracy given two lists of accuracy values.
+
+    Parameters
+    ----------
+    clustering_accuracy_1 : dict[float, list[float]]
+        The first clustering accuracy values to compare.
+
+    clustering_accuracy_2 : dict[float, list[float]]
+        The second clustering accuracy values to compare.
+
+    x_axis : str
+        The x-axis label.
+
+    y_axis : str, optional
+        The y-axis label. The default is 'Mean Prediction Accuracy'.
+        
+    title_1 : str, optional
+
+    title_2 : str, optional
+
+    Returns
+    -------
+    None.
+        Plots the clustering accuracy comparison.
+    """
+    # for each key in the dictionary, compute the mean and standard deviation
+    # of the values in the list
+    mean_list_1 = []
+    std_list_1 = []
+
+    for key in clustering_accuracy_1:
+        mean_list_1.append(np.mean(clustering_accuracy_1[key]))
+        std_list_1.append(np.std(clustering_accuracy_1[key]))
+
+    # for each key in the dictionary, compute the mean and standard deviation
+    # of the values in the list
+    mean_list_2 = []
+    std_list_2 = []
+    
+    for key in clustering_accuracy_2:
+        mean_list_2.append(np.mean(clustering_accuracy_2[key]))
+        std_list_2.append(np.std(clustering_accuracy_2[key]))
+
+    # plot the mean as a line and the standard deviation as a shaded area
+    # unless the mean minus the standard deviation is less than zero or the
+    # mean plus the standard deviation is greater than one
+    fig, ax = plt.subplots(figsize=(14, 10))
+    ax.plot(clustering_accuracy_1.keys(), mean_list_1, color="blue")
+    ax.plot(clustering_accuracy_2.keys(), mean_list_2, color="red")
+
+    if y_axis == 'Mean Prediction Accuracy':
+        ax.fill_between(clustering_accuracy_1.keys(),
+                        [max(0, mean - std) for mean, std in zip(mean_list_1, std_list_1)],
+                        [min(1, mean + std) for mean, std in zip(mean_list_1, std_list_1)],
+                        color="blue", alpha=0.2)
+        ax.fill_between(clustering_accuracy_2.keys(),
+                        [max(0, mean - std) for mean, std in zip(mean_list_2, std_list_2)],
+                        [min(1, mean + std) for mean, std in zip(mean_list_2, std_list_2)],
+                        color="red", alpha=0.2)
+        
+    ax.set_title(title, fontsize=20)
+    ax.set_xlabel(x_axis, fontsize=20)
+    ax.set_ylabel(y_axis, fontsize=20)
+    ax.tick_params(axis='both', labelsize=20)
+    ax.legend([title_1, title_2], fontsize=20)
 
     plt.show()

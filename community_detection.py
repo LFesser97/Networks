@@ -78,8 +78,6 @@ def detect_communities(G, curvature, threshold):
         affecteds = list(G_copy.edges([u, v]))
         threshold_edges = [(u, v) for u, v, d in threshold_list]
 
-        # update graph attributes and calculate new curvature values
-
         # delete all the cycles involving (u, v) from G_copy.cycles['triangles']
         G_copy.cycles['triangles'] = [cycle for cycle in G_copy.cycles['triangles']
                                       if (u, v) not in cycle]
