@@ -325,7 +325,8 @@ def plot_clustering_accuracy(clustering_accuracy, x_axis,
 
 def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accuracy_2,
                                         x_axis, y_axis='Mean Prediction Accuracy',
-                                        title_1='', title_2='', font_size=20):
+                                        title_1='', title_2='', font_size=20,
+                                        legend_loc='lower right'):
     """
     Compare the clustering accuracy given two lists of accuracy values.
 
@@ -348,6 +349,8 @@ def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accura
     title_2 : str, optional
 
     font_size : int, optional
+
+    legend_loc : str, optional
 
     Returns
     -------
@@ -392,6 +395,6 @@ def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accura
     ax.set_xlabel(x_axis, fontsize=font_size)
     ax.set_ylabel(y_axis, fontsize=font_size)
     ax.tick_params(axis='both', labelsize=font_size)
-    ax.legend([title_1, title_2], fontsize=font_size)
+    ax.legend([title_1, title_2], fontsize=font_size, loc=legend_loc)
 
     plt.show()
