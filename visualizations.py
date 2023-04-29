@@ -138,7 +138,8 @@ def get_bin_width(b_min, b_max, num_bin_lim):
 
 
 def plot_curvature_hist_colors(h_data, title_str,
-                               x_axis_str, y_axis_str, my_bin_num=40):
+                               x_axis_str, y_axis_str, font_size,
+                               my_bin_num=40):
     """
     Show the histogram for the given data.
 
@@ -155,6 +156,9 @@ def plot_curvature_hist_colors(h_data, title_str,
 
     y_axis_str : str
         The label to use for the y-axis.
+
+    font_size : int
+        The font size to use.
 
     my_bin_num : int, optional
         The number of bins to use. The default is 40.
@@ -183,12 +187,12 @@ def plot_curvature_hist_colors(h_data, title_str,
             alpha=0.7)
 
     # ax.set_title(title_str)
-    ax.title.set_size(16)
-    ax.tick_params(axis='both', labelsize=16)
+    ax.title.set_size(font_size)
+    ax.tick_params(axis='both', labelsize=font_size)
     ax.grid(visible=True, axis="both")
-    ax.set_xlabel(x_axis_str, fontsize=16)
-    ax.set_ylabel(y_axis_str, fontsize=16)
-    fig.suptitle(title_str, size=20)
+    ax.set_xlabel(x_axis_str, fontsize=font_size)
+    ax.set_ylabel(y_axis_str, fontsize=font_size)
+    fig.suptitle(title_str, size=font_size + 2)
     plt.show()
 
 
