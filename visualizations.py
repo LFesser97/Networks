@@ -192,7 +192,7 @@ def plot_curvature_hist_colors(h_data, title_str,
     plt.show()
 
 
-def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
+def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str, font_size):
     """
     Plot histogram of curvature values
 
@@ -210,6 +210,9 @@ def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     y_axis_str : str
         The label to use for the y-axis.
 
+    font_size : int
+        The font size to use for the plot.
+
     Returns
     -------
     None.
@@ -217,10 +220,10 @@ def plot_curvature_hist(curv_list, title, x_axis_str, y_axis_str):
     """
     fig, ax = plt.subplots(figsize=(14, 10))
     ax.hist(curv_list, bins=40, edgecolor="white")
-    ax.set_title(title, fontsize=16)
-    ax.set_xlabel(x_axis_str, fontsize=20)
-    ax.set_ylabel(y_axis_str, fontsize=16)
-    ax.tick_params(axis='both', labelsize=16)
+    ax.set_title(title, fontsize=font_size)
+    ax.set_xlabel(x_axis_str, fontsize=font_size)
+    ax.set_ylabel(y_axis_str, fontsize=font_size)
+    ax.tick_params(axis='both', labelsize=font_size)
     ax.grid(visible=True, axis="both")
     plt.show()
 

@@ -387,7 +387,8 @@ class CurvatureGraph(nx.Graph):
 
     def plot_curvature_histogram(self, curvature,
                                  title='No title', x_axis='x-axis',
-                                 y_axis='y-axis', colors=False):
+                                 y_axis='y-axis', colors=False,
+                                 font_size=30):
         """
         Plot a histogram of the values of a curvature.
 
@@ -419,7 +420,8 @@ class CurvatureGraph(nx.Graph):
                          for edge in self.edges if self.edges[edge]["group"] == "between"]],
                         title_str=title,
                         x_axis_str=x_axis,
-                        y_axis_str=y_axis
+                        y_axis_str=y_axis,
+                        font_size=font_size
                     )
 
                 except KeyError:
@@ -430,7 +432,8 @@ class CurvatureGraph(nx.Graph):
                     [self.edges[edge][curvature] for edge in self.edges],
                     title=title,
                     x_axis_str=x_axis,
-                    y_axis_str=y_axis
+                    y_axis_str=y_axis,
+                    font_size=font_size
                     )
 
         except KeyError as error:
