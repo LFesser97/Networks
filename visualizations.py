@@ -325,7 +325,7 @@ def plot_clustering_accuracy(clustering_accuracy, x_axis,
 
 def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accuracy_2,
                                         x_axis, y_axis='Mean Prediction Accuracy',
-                                        title_1='', title_2=''):
+                                        title_1='', title_2='', font_size=20):
     """
     Compare the clustering accuracy given two lists of accuracy values.
 
@@ -347,6 +347,8 @@ def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accura
 
     title_2 : str, optional
 
+    font_size : int, optional
+
     Returns
     -------
     None.
@@ -365,7 +367,7 @@ def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accura
     # of the values in the list
     mean_list_2 = []
     std_list_2 = []
-    
+
     for key in clustering_accuracy_2:
         mean_list_2.append(np.mean(clustering_accuracy_2[key]))
         std_list_2.append(np.std(clustering_accuracy_2[key]))
@@ -386,10 +388,10 @@ def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accura
                         [max(0, mean - std) for mean, std in zip(mean_list_2, std_list_2)],
                         [min(1, mean + std) for mean, std in zip(mean_list_2, std_list_2)],
                         color="red", alpha=0.2)
-        
-    ax.set_xlabel(x_axis, fontsize=20)
-    ax.set_ylabel(y_axis, fontsize=20)
-    ax.tick_params(axis='both', labelsize=20)
-    ax.legend([title_1, title_2], fontsize=20)
+
+    ax.set_xlabel(x_axis, fontsize=font_size)
+    ax.set_ylabel(y_axis, fontsize=font_size)
+    ax.tick_params(axis='both', labelsize=font_size)
+    ax.legend([title_1, title_2], fontsize=font_size)
 
     plt.show()
