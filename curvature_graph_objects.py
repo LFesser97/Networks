@@ -1135,11 +1135,37 @@ class CurvatureSchoolDay1(CurvatureGraph):
         """
         Assign edges to be between or within communities.
         """
-        pass
+        self = af.assign_edges(self, "classname")
 
 
     def compute_curvature_gap(self, curv_name):
         """
         Compute the curvature gap for the graph.
         """
-        pass
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "classname")
+
+
+class CurvatureSchoolDay2(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for the School Day 2 graph
+    """
+    def __init__(self):
+        super().__init__(nx.read_gexf("Network Models/school_day_2.gexf"))
+
+        # relabel node names with integers using nx.relabel_nodes
+        mapping = dict(zip(self, range(len(self.nodes))))
+        self = nx.relabel_nodes(self, mapping, copy=False)
+
+
+    def assign_edges(self):
+        """
+        Assign edges to be between or within communities.
+        """
+        self = af.assign_edges(self, "classname")
+
+
+    def compute_curvature_gap(self, curv_name):
+        """
+        Compute the curvature gap for the graph.
+        """
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "classname")
