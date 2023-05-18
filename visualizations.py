@@ -28,7 +28,7 @@ def plot_my_graph(G,
                   bbox,
                   color_map,
                   alpha,
-                  colorbar=False):
+                  colorbar=True):
     """
     Plot a graph with the given node and edge colors.
 
@@ -269,7 +269,7 @@ def plot_curvature_differences(G, curvature_difference):
 
         # plot the graph with the edges colored using plot_my_graph,
         # add a colorbar to show the color scale
-        plot_my_graph(G, pos=G.pos, 
+        plot_my_graph(G, pos=G.pos,
                       node_col="white", edge_lst=[],
                       edge_col=colors, edge_lab={},
                       bbox=None, color_map="Set3",
