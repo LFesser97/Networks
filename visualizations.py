@@ -272,8 +272,8 @@ def plot_curvature_differences(G, curvature_difference):
         "font_size": 12,
         "font_color": "black",
         "node_size": 300,
-        "cmap": plt.get_cmap(color_map),
-        "alpha": alpha,
+        "cmap": plt.get_cmap("Set3"),
+        "alpha": 1.0,
         "edgecolors": "black",
         "linewidths": 0.5,
         "with_labels": True,
@@ -293,7 +293,7 @@ def plot_curvature_differences(G, curvature_difference):
         nx.draw_networkx_edge_labels(G, G.pos, label_pos=0.5,
                                     edge_labels={},
                                     rotate=False, bbox=None)
-        
+
         # add a colorbar to show the color scale used for the edges
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
