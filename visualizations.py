@@ -267,13 +267,46 @@ def plot_curvature_differences(G, curvature_difference):
         # create a list of colors for each edge
         colors = [cmap(norm(value)) for value in curv_diff_list]
 
-        # plot the graph with the edges colored using plot_my_graph,
-        # add a colorbar to show the color scale
-        plot_my_graph(G, pos=G.pos,
-                      node_col="white", edge_lst=[],
-                      edge_col=colors, edge_lab={},
-                      bbox=None, color_map="Set3",
-                      alpha=1.0, colorbar=True)
+        # plot the graph with the edges colored using plot_my_graph
+        node_options = {
+        "font_size": 12,
+        "font_color": "black",
+        "node_size": 300,
+        "cmap": plt.get_cmap(color_map),
+        "alpha": alpha,
+        "edgecolors": "black",
+        "linewidths": 0.5,
+        "with_labels": True,
+        "edgelist": None
+        }
+        edge_options = {
+            "width": 0.5
+            }
+        fig = plt.figure(figsize=(15, 15))
+        # nx.draw_networkx (G, pos, **options)
+        nx.draw_networkx(G, G.pos, node_color="white",
+                        edge_color=colors, **node_options)
+
+        nx.draw_networkx_edges(G, G.pos, [],
+                            edge_color=colors, **edge_options)
+
+        nx.draw_networkx_edge_labels(G, G.pos, label_pos=0.5,
+                                    edge_labels={},
+                                    rotate=False, bbox=None)
+        
+        # add a colorbar to show the color scale used for the edges
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        plt.colorbar(sm)
+
+        plt.gca().margins(0.20)
+        plt.show()
+
+        # plot_my_graph(G, pos=G.pos,
+        #              node_col="white", edge_lst=[],
+        #              edge_col=colors, edge_lab={},
+        #              bbox=None, color_map="Set3",
+        #              alpha=1.0, colorbar=True)
 
     except KeyError:
         print("This curvature difference has not been calculated for this graph.")
