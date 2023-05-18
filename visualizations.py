@@ -266,12 +266,13 @@ def plot_curvature_differences(G, curvature_difference):
         # create a list of colors for each edge
         colors = [cmap(norm(value)) for value in curv_diff_list]
 
-        # plot the graph with the edges colored using plot_my_graph
+        # plot the graph with the edges colored using plot_my_graph,
+        # add a colorbar to show the color scale
         plot_my_graph(G, pos=G.pos, 
                       node_col="white", edge_lst=[],
                       edge_col=colors, edge_lab={},
                       bbox=None, color_map="Set3",
-                      alpha=1.0)
+                      alpha=1.0, colorbar=True)
 
     except KeyError:
         print("This curvature difference has not been calculated for this graph.")
