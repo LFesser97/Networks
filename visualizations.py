@@ -261,7 +261,7 @@ def plot_curvature_differences(G, curvature_difference):
         max_val = max(curv_diff_list)
 
         # create a colormap with varying intensity of red
-        cmap = plt.cm.get_cmap('Rd')
+        cmap = plt.cm.get_cmap("Blues_r")
         norm = plt.Normalize(min_val, max_val)
         colors = [cmap(norm(value)) for value in curv_diff_list]
 
@@ -273,7 +273,7 @@ def plot_curvature_differences(G, curvature_difference):
                         "linewidths": 0.5, "with_labels": True,
                         "edgelist": None}
         edge_options = {"width": 0.5}
-        
+
         fig = plt.figure(figsize=(15, 15))
         # nx.draw_networkx (G, pos, **options)
         nx.draw_networkx(G, G.pos, node_color="white",
