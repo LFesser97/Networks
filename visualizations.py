@@ -27,7 +27,8 @@ def plot_my_graph(G,
                   edge_lab,
                   bbox,
                   color_map,
-                  alpha):
+                  alpha,
+                  colorbar=False):
     """
     Plot a graph with the given node and edge colors.
 
