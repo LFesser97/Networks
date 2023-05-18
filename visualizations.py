@@ -260,39 +260,31 @@ def plot_curvature_differences(G, curvature_difference):
         min_val = min(curv_diff_list)
         max_val = max(curv_diff_list)
 
-        # create a colormap
-        cmap = plt.cm.get_cmap('RdBu')
-        norm = plt.Normalize(vmin=min_val, vmax=max_val)
-
-        # create a list of colors for each edge
+        # create a colormap with varying intensity of red
+        cmap = plt.cm.get_cmap('Rd')
+        norm = plt.Normalize(min_val, max_val)
         colors = [cmap(norm(value)) for value in curv_diff_list]
 
+
         # plot the graph with the edges colored using plot_my_graph
-        node_options = {
-        "font_size": 12,
-        "font_color": "black",
-        "node_size": 300,
-        "cmap": plt.get_cmap("Set3"),
-        "alpha": 1.0,
-        "edgecolors": "black",
-        "linewidths": 0.5,
-        "with_labels": True,
-        "edgelist": None
-        }
-        edge_options = {
-            "width": 0.5
-            }
+        node_options = {"font_size": 12,"font_color": "black",
+                        "node_size": 300, "cmap": plt.get_cmap("Set3"),
+                        "alpha": 1.0, "edgecolors": "black",
+                        "linewidths": 0.5, "with_labels": True,
+                        "edgelist": None}
+        edge_options = {"width": 0.5}
+        
         fig = plt.figure(figsize=(15, 15))
         # nx.draw_networkx (G, pos, **options)
         nx.draw_networkx(G, G.pos, node_color="white",
-                        edge_color=colors, **node_options)
+                         edge_color=colors, **node_options)
 
         nx.draw_networkx_edges(G, G.pos, [],
-                            edge_color=colors, **edge_options)
+                               edge_color=colors, **edge_options)
 
         nx.draw_networkx_edge_labels(G, G.pos, label_pos=0.5,
-                                    edge_labels={},
-                                    rotate=False, bbox=None)
+                                     edge_labels={},
+                                     rotate=False, bbox=None)
 
         # add a colorbar to show the color scale used for the edges
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
