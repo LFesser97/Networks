@@ -261,7 +261,7 @@ def plot_curvature_differences(G, curvature_difference):
         max_val = max(curv_diff_list)
 
         # create a colormap with varying intensity of red
-        cmap = plt.cm.get_cmap("Blues_r")
+        cmap = plt.cm.get_cmap("RdBu")
         norm = plt.Normalize(min_val, max_val)
         colors = [cmap(norm(value)) for value in curv_diff_list]
 
