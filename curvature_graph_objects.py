@@ -556,11 +556,11 @@ class CurvatureSBM(CurvatureGraph):
         super().__init__(nx.stochastic_block_model(sizes, probs, seed = np.random.randint(0, 1000)))
 
 
-    def compute_curvature_gap(self, curv_name):
+    def compute_curvature_gap(self, curv_name, key = "block"):
         """
         Compute the curvature gap for the graph.
         """
-        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name)
+        self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, key)
 
 
     def assign_edges(self):
