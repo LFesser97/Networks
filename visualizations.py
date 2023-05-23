@@ -274,10 +274,10 @@ def plot_curvature_differences(G, curvature_difference):
                         "edgelist": None}
         edge_options = {"width": 0.5}
 
-        fig = plt.figure(figsize=(15, 15))
+        fig = plt.figure(figsize=(20, 20))
         # nx.draw_networkx (G, pos, **options)
-        nx.draw_networkx(G, G.pos, node_color="white",
-                         edge_color=colors, **node_options)
+        blocks = [G.nodes[n]["block"] for n in G.nodes]
+        nx.draw_networkx(G, G.pos, node_color= blocks, edge_color=colors, **node_options)
 
         nx.draw_networkx_edges(G, G.pos, [],
                                edge_color=colors, **edge_options)
@@ -289,7 +289,7 @@ def plot_curvature_differences(G, curvature_difference):
         # add a colorbar to show the color scale used for the edges
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
-        plt.colorbar(sm, fontsize=12)
+        plt.colorbar(sm, fontsize=20)
 
         plt.gca().margins(0.20)
         plt.show()
