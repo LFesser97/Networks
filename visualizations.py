@@ -289,7 +289,7 @@ def plot_curvature_differences(G, curvature_difference):
         # add a colorbar to show the color scale used for the edges
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
-        plt.colorbar(sm, fontsize=20)
+        plt.colorbar(sm, fontsize=12)
 
         plt.gca().margins(0.20)
         plt.show()
