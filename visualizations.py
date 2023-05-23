@@ -281,7 +281,7 @@ def plot_curvature_differences(G, curvature_difference):
 
         nx.draw_networkx_edges(G, G.pos, [],
                                edge_color=colors, **edge_options)
-
+        
         nx.draw_networkx_edge_labels(G, G.pos, label_pos=0.5,
                                      edge_labels={},
                                      rotate=False, bbox=None)
@@ -289,16 +289,11 @@ def plot_curvature_differences(G, curvature_difference):
         # add a colorbar to show the color scale used for the edges
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
-        plt.colorbar(sm)
+        cbar = plt.colorbar(sm)
+        cbar.ax.tick_params(labelsize=20)
 
-        plt.gca().margins(0.20)
+        # plt.gca().margins(0.20)
         plt.show()
-
-        # plot_my_graph(G, pos=G.pos,
-        #              node_col="white", edge_lst=[],
-        #              edge_col=colors, edge_lab={},
-        #              bbox=None, color_map="Set3",
-        #              alpha=1.0, colorbar=True)
 
     except KeyError:
         print("This curvature difference has not been calculated for this graph.")
