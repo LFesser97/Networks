@@ -290,7 +290,7 @@ def plot_curvature_differences(G, curvature_difference):
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
         cbar = plt.colorbar(sm)
-        cbar.ax.tick_params(labelsize=20)
+        cbar.ax.tick_params(labelsize=40)
 
         # plt.gca().margins(0.20)
         plt.show()
