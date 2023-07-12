@@ -412,7 +412,7 @@ def plot_clustering_accuracy_comparison(clustering_accuracy_1, clustering_accura
     ax.plot(clustering_accuracy_1.keys(), mean_list_1, color="blue")
     ax.plot(clustering_accuracy_2.keys(), mean_list_2, color="red")
 
-    if y_axis == 'Mean Prediction Accuracy':
+    if y_axis == 'Mean accuracy':
         ax.fill_between(clustering_accuracy_1.keys(),
                         [max(0, mean - std) for mean, std in zip(mean_list_1, std_list_1)],
                         [min(1, mean + std) for mean, std in zip(mean_list_1, std_list_1)],
