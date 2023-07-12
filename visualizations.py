@@ -300,7 +300,8 @@ def plot_curvature_differences(G, curvature_difference):
 
 
 def plot_clustering_accuracy(clustering_accuracy, x_axis,
-                             y_axis='Mean Prediction Accuracy', title=''):
+                             y_axis='Mean Prediction Accuracy', title='',
+                             runtime=False):
     """
     Plot the clustering accuracy given a list of accuracy values.
 
@@ -338,7 +339,7 @@ def plot_clustering_accuracy(clustering_accuracy, x_axis,
     fig, ax = plt.subplots(figsize=(14, 10))
     ax.plot(clustering_accuracy.keys(), mean_list, color="blue")
 
-    if y_axis == 'Mean accuracy':
+    if not runtime:
         ax.fill_between(clustering_accuracy.keys(),
                         [max(0, mean - std) for mean, std in zip(mean_list, std_list)],
                         [min(1, mean + std) for mean, std in zip(mean_list, std_list)],
