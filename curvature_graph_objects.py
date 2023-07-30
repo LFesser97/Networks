@@ -1169,3 +1169,19 @@ class CurvatureSchoolDay2(CurvatureGraph):
         Compute the curvature gap for the graph.
         """
         self.curvature_gap[curv_name] = cg.compute_curvature_gap(self, curv_name, cmp_key = "classname")
+
+
+class PyGCurvatureGraph(CurvatureGraph):
+    """
+    A subclass of CurvatureGraph specifically for graphs
+    from the Pytorch Geometric package.
+    """
+    def __init__(self, graph):
+        """
+        Initialize the graph object.
+        """
+        super().__init__(graph)
+
+        # relabel node names with integers using nx.relabel_nodes
+        mapping = dict(zip(self, range(len(self.nodes))))
+        self = nx.relabel_nodes(self, mapping, copy=False)
