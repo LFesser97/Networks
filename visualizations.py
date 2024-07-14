@@ -181,6 +181,7 @@ def plot_curvature_hist_colors(h_data, title_str,
 
     bin_lo_lim, bin_hi_lim, bin_width = get_bin_width(
         min_val, max_val, my_bin_num)
+    bin_width = (bin_hi_lim - bin_lo_lim) / 41
     ax.hist(h_data,
             bins=np.arange(bin_lo_lim, bin_hi_lim + bin_width, bin_width),
             edgecolor="white",
